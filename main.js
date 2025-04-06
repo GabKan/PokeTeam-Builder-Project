@@ -1,27 +1,34 @@
-let allPokemon = [];
+let pokemon_url = [];
 
-function displayPokemon() {
-    for(let pokemon of allPokemon)
+function display_pokemon() {
+    for(let pokemon of pokemon_url)
         console.log(pokemon);
 }
 
-async function getAllPokemon() {
-    let url = "https://pokeapi.co/api/v2/pokemon/";
+async function get_all_pokemon() {
+    let url = "https://pokeapi.co/api/v2/pokemon/?offset=0&limit=1302";
+    const response = await fetch(url);
+    const data = await response.json();
 
-    while (url !== null) {
-        const response = await fetch(url);
-        const data = await response.json();
-
-        for(let result of data.results) {
-            allPokemon.push(result.url);
-        }
-
-        url = data.next;
+    for(let result of data.results) {
+        pokemon_url.push(result.url);
     }
 
-    console.log("Total Pokemon: " + allPokemon.length);
-
-    displayPokemon();
+    // display_pokemon();
 }
 
-getAllPokemon();
+async function get_pokemon(id) {
+    const response = await fetch(pokemon_url[id]);
+    const data = await response.json();
+
+    return data;
+}
+
+async function main() {
+    await get_all_pokemon();
+    let data = await get_pokemon(0);
+
+    console.log(data.sprites.other.showdown.front_default);
+}
+
+main();
