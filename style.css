@@ -5,6 +5,20 @@ body {
     color: black;
 }
 
+h1{
+    padding:0;
+    margin:0;
+}
+
+main{
+    display:grid;
+    grid-template-columns: 440px 440px 440px;
+    width:95%;
+    margin: 0 auto;
+    gap: 20px;
+    justify-content: center;
+}
+
 nav {
     background-color: red;
     color: white;
@@ -89,6 +103,37 @@ input {
     color: red;
     padding-bottom: 10px;
     font-size: 1.5rem;
+}
+
+.card{
+    display:flex;
+    border-radius: 10px;
+    background-color: white;
+    font-size: 0.7em;
+    padding: 15px;
+    box-shadow: -11px 9px 5px -4px rgba(0,0,0,0.31);
+    border: 1px solid rgb(176, 175, 175);
+    height:285px;
+    box-sizing: border-box;
+    gap:10px;
+    justify-content: flex-end;
+}
+
+.move_list{
+    border-radius:10px;
+    height:200px;
+    width:85px;
+    padding:2px;
+    border: 0.5px solid black;
+    margin-right:0;
+}
+
+.poke_image{
+    margin-top:25px;
+    border: 1px solid black;
+    height:180px;
+    width:250px;
+    padding:0px;
 }
 
 
