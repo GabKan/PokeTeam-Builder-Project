@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,108 +8,226 @@
     <link rel="stylesheet" href="style.css">
 
 </head>
+
 <body>
     <nav>Pokemon Team Builder</nav>
-    
-        <div class="builider-section">
-            <h1>Pokemon Team Builder</h1>
-            <div>
-                <button>Save My Team</button>
-                <button>Share</button>
-            </div>
-            </div>
-        
-            <div class="pokemon-first">
-            <label for="pokemon-name">Name</label>
-            <input type="text" id="pokemon-name" name="pokemon-name" placeholder="Pokemon Name">
-        
-        <main>    
-            <section id="pk1" class="card">
-                <div id="pk_img1" class="poke_image">
-        
-                </div>
-                <div id="move_select1" class="move_list">
-        
-                </div>
-            </section>
-        
-            <section id="pk2" class="card">
-                <div id="pk_img2" class="poke_image">
-        
-                </div>
-                <div id="move_select2" class="move_list">
-        
-                </div>
-            </section>
-        
-            <section id="pk3" class="card">
-                <div id="pk_img3" class="poke_image">
-        
-                </div>
-                <div id="move_select3" class="move_list">
-        
-                </div>
-            </section>
-        
-            <section id="pk4" class="card">
-                <div id="pk_img4" class="poke_image">
-        
-                </div>
-                <div id="move_select4" class="move_list">
-        
-                </div>
-                
-            </section>
-        
-            <section id="pk5" class="card">
-                <div id="pk_img5" class="poke_image">
-        
-                </div>
-                <div id="move_select5" class="move_list">
-        
-                </div>
-            </section>
-        
-            <section id="pk6" class="card">
-                <div id="pk_img6" class="poke_image">
-        
-                </div>
-                <div id="move_select6" class="move_list">
-        
-                </div>
-                
-            </section>
-        </main>
-        
-            <div class="ability-group">
-            <label for="pokemon-type">Type</label>
-            <input type="text" id="pokemon-type" name="pokemon-type" placeholder="Type">
-            
-                </div>        </div>
-       </div>
-        
-        
-        
-        <div class="type-container">
-            <div class="type-category">
-                <h2>Weaknesses</h2>
-                <div id="weaknesses"></div>
-            </div>
-        
-            <div class="type-category">
-                <h3>Super-Effective</h3>
-                <div id="supper-effective"></div>
-            </div>
-        
-            <div class="type-category">
-                <h4>Neutral</h4>
-                <div id="neutral"></div>
-            </div>
-        
+
+    <div class="builider-section">
+        <h1>Enter Your Pokemon</h1>
+        <div>
+            <button>Save My Team</button>
+            <button>Share</button>
         </div>
-    
+    </div>
+    <main>
+        <section id="pk1" class="card">
+            <input type="text" class="nickname" placeholder="Nickname">
+            <div class="poke_info">
+                <label>Pokemon Name</label>
+                <input type="text" placeholder="Name">
+
+                <div class="image-move-row">
+                    <div id="pk_img1" class="poke_image"></div>
+                    <div class="move-wrapper">
+                        <div class="moves-box">
+                            <select class="move_dropdown">
+                                <option value="">Move 1</option>
+                            </select>
+                            <select class="move_dropdown">
+                                <option value="">Move 2</option>
+                            </select>
+                            <select class="move_dropdown">
+                                <option value="">Move 3</option>
+                            </select>
+                            <select class="move_dropdown">
+                                <option value="">Move 4</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <label>Pokemon Type</label>
+                <input type="text" placeholder="Type">
+            </div>
+
+        </section>
+
+        <section id="pk2" class="card">
+            <input type="text" class="nickname" placeholder="Nickname">
+            <div class="poke_info">
+                <label>Pokemon Name</label>
+                <input type="text" placeholder="Name">
+
+                <div class="image-move-row">
+                    <div id="pk_img2" class="poke_image"></div>
+                    <div class="move-wrapper">
+                        <div class="moves-box">
+                            <select class="move_dropdown">
+                                <option value="">Move 1</option>
+                            </select>
+                            <select class="move_dropdown">
+                                <option value="">Move 2</option>
+                            </select>
+                            <select class="move_dropdown">
+                                <option value="">Move 3</option>
+                            </select>
+                            <select class="move_dropdown">
+                                <option value="">Move 4</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <label>Pokemon Type</label>
+                <input type="text" placeholder="Type">
+            </div>
+
+        </section>
+
+
+        <section id="pk3" class="card">
+            <input type="text" class="nickname" placeholder="Nickname">
+            <div class="poke_info">
+                <label>Pokemon Name</label>
+                <input type="text" placeholder="Name">
+
+                <div class="image-move-row">
+                    <div id="pk_img3" class="poke_image"></div>
+                    <div class="move-wrapper">
+                        <div class="moves-box">
+                            <select class="move_dropdown">
+                                <option value="">Move 1</option>
+                            </select>
+                            <select class="move_dropdown">
+                                <option value="">Move 2</option>
+                            </select>
+                            <select class="move_dropdown">
+                                <option value="">Move 3</option>
+                            </select>
+                            <select class="move_dropdown">
+                                <option value="">Move 4</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <label>Pokemon Type</label>
+                <input type="text" placeholder="Type">
+            </div>
+        </section>
+
+        <section id="pk4" class="card">
+            <input type="text" class="nickname" placeholder="Nickname">
+            <div class="poke_info">
+                <label>Pokemon Name</label>
+                <input type="text" placeholder="Name">
+
+                <div class="image-move-row">
+                    <div id="pk_img4" class="poke_image"></div>
+                    <div class="move-wrapper">
+                        <div class="moves-box">
+                            <select class="move_dropdown">
+                                <option value="">Move 1</option>
+                            </select>
+                            <select class="move_dropdown">
+                                <option value="">Move 2</option>
+                            </select>
+                            <select class="move_dropdown">
+                                <option value="">Move 3</option>
+                            </select>
+                            <select class="move_dropdown">
+                                <option value="">Move 4</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <label>Pokemon Type</label>
+                <input type="text" placeholder="Type">
+            </div>
+        </section>
+
+        <section id="pk5" class="card">
+            <input type="text" class="nickname" placeholder="Nickname">
+            <div class="poke_info">
+                <label>Pokemon Name</label>
+                <input type="text" placeholder="Name">
+
+                <div class="image-move-row">
+                    <div id="pk_img5" class="poke_image"></div>
+                    <div class="move-wrapper">
+                        <div class="moves-box">
+                            <select class="move_dropdown">
+                                <option value="">Move 1</option>
+                            </select>
+                            <select class="move_dropdown">
+                                <option value="">Move 2</option>
+                            </select>
+                            <select class="move_dropdown">
+                                <option value="">Move 3</option>
+                            </select>
+                            <select class="move_dropdown">
+                                <option value="">Move 4</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <label>Pokemon Type</label>
+                <input type="text" placeholder="Type">
+            </div>
+        </section>
+
+        <section id="pk6" class="card">
+            <input type="text" class="nickname" placeholder="Nickname">
+            <div class="poke_info">
+                <label>Pokemon Name</label>
+                <input type="text" placeholder="Name">
+
+                <div class="image-move-row">
+                    <div id="pk_img6" class="poke_image"></div>
+                    <div class="move-wrapper">
+                        <div class="moves-box">
+                            <select class="move_dropdown">
+                                <option value="">Move 1</option>
+                            </select>
+                            <select class="move_dropdown">
+                                <option value="">Move 2</option>
+                            </select>
+                            <select class="move_dropdown">
+                                <option value="">Move 3</option>
+                            </select>
+                            <select class="move_dropdown">
+                                <option value="">Move 4</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <label>Pokemon Type</label>
+                <input type="text" placeholder="Type">
+            </div>
+        </section>
+
+        <div class="enter-button-container">
+            <button class="enter-button">Enter</button>
+        </div>
+
     </main>
-    
+    </div>
+
+    <div class="type-container">
+        <div class="type-category">
+            <h2>Weaknesses</h2>
+            <div id="weaknesses"></div>
+        </div>
+
+        <div class="type-category">
+            <h3>Super-Effective</h3>
+            <div id="supper-effective"></div>
+        </div>
+
+        <div class="type-category">
+            <h4>Neutral</h4>
+            <div id="neutral"></div>
+        </div>
+    </div>
+
 </body>
 <script src="main.js"></script>
+
 </html>
