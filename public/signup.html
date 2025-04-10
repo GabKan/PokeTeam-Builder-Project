@@ -126,32 +126,29 @@
   </nav>
 
   <main class="container">
-    <div class="row">
-      <h1 class="center-align">Sign Up</h1>
-
-      <div class="signup">
-        <div class="input-field">
-          <input id="email" type="email" class="email" required>
+    <h1 class="center-align">Sign Up</h1>
+    <form id="my-form">
+      <div class="row">
+        <div class="signup input-field">
+          <input name="email" id="email" type="email" class="email" required>
           <label for="email">Email</label>
         </div>
       </div>
 
-      <div class="signup">
-        <div class="input-field">
-          <input id="password" type="password" class="password" required>
+      <div class="row">
+        <div class="signup input-field">
+          <input name="password" id="password" type="password" class="password" required>
           <label for="password">Password</label>
         </div>
       </div>
 
-      <div class="submit btn">
-        <button class="button" type="submit" name="action">
-          Sign Up
-        </button>
+      <div class="row">
+        <div class="submit btn">
+          <input type="submit" class="button" value="Sign Up" required>
+        </div>
       </div>
-    </div>
+    </form>
   </main>
-
-
+  <script src="main.js"></script>
 </body>
-
 </html>
