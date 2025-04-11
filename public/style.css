@@ -181,3 +181,14 @@ input[type="text"] {
     gap: 10px;
     width: 150px;
 }
+
+.list{
+    display: none;    
+    background-color: white;
+    border: 1px solid #2f2d2d;
+    border-radius: 8px;
+    max-height: 400px;  
+    overflow-y: auto;       
+    z-index: 100;  
+    text-decoration: none;
+}
