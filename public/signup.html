@@ -57,7 +57,7 @@
       justify-content: center;
       padding: 40px;
       margin-top: 4rem;
-      border-radius: 10px;
+      min-height: 60vh;
     }
 
     .center-align {
@@ -90,7 +90,7 @@
       font-weight: normal;
     }
 
-  .row {
+    .row {
   width: 100%;
   max-width: 500px; 
   padding: 2rem;
@@ -117,7 +117,7 @@
           </a>
         </li>
         <li>
-          <a href="login.htl">
+          <a href="login.html">
             Login
           </a>
         </li>
@@ -126,29 +126,33 @@
   </nav>
 
   <main class="container">
-    <h1 class="center-align">Sign Up</h1>
-    <form id="my-form">
-      <div class="row">
-        <div class="signup input-field">
+    <div class="row">
+      <h1 class="center-align">Welcome to Pokémon Team Builder</h1>
+      <h1 class="center-align">Sign Up</h1>
+
+      <div class="signup">
+        <div class="input-field">
           <input name="email" id="email" type="email" class="email" required>
           <label for="email">Email</label>
         </div>
       </div>
 
-      <div class="row">
-        <div class="signup input-field">
+      <div class="signup">
+        <div class="input-field">
           <input name="password" id="password" type="password" class="password" required>
           <label for="password">Password</label>
         </div>
       </div>
 
-      <div class="row">
-        <div class="submit btn">
-          <input type="submit" class="button" value="Sign Up" required>
-        </div>
-      </div>
-    </form>
+      <div class="submit btn">
+        <button class="button" type="submit" name="action">
+          Sign Up
+        </button>
+  </div>
+</div>
   </main>
   <script src="main.js"></script>
+
 </body>
+
 </html>
