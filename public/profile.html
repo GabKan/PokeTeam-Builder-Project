@@ -1,11 +1,223 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Saved Teams</title>
+
+    <style>
+        main {
+            margin: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: white;
+            padding: 20px;
+        }
+
+        nav {
+            background: red;
+            color: black;
+            text-align: center;
+            padding: 10px;
+            font-size: 30px;
+            margin-bottom: 50px;
+        }
+
+        h1 {
+            font-size: 20px;
+            margin-bottom: 10px;
+            ;
+        }
+
+        button {
+            background-color: green;
+            color: white;
+            margin: 5px;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 15px;
+            margin-left: 10px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: rgb(139, 204, 226);
+        }
+
+        .saved-teams {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 80px;
+            max-width: 1000px;
+            margin: auto;
+        }
+
+        .team-card {
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 250px;
+            max-width: 250px;
+            text-align: center;
+        }
+
+        .pokemon-imagines {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+
+        .poke-imagine {
+            background-color: #ddd;
+            width: 80px;
+            height: 80px;
+            border-radius: 5px;
+        }
+
+        .edit-delete-buttons {
+            margin-top: 10px;
+        }
+
+        .view-team-btn {
+            width: 100%;
+            background-color: blue;
+            margin-bottom: 10px;
+        }
+
+        .edit-btn,
+        .delete-btn {
+            background-color: green;
+        }
+
+        .edit-btn:hover,
+        .delete-btn:hover {
+            background-color: lightgreen;
+        }
+    </style>
 </head>
+
 <body>
-    
+    <nav>My Pokemon Teams</nav>
+
+    <main class="saved-teams">
+
+        <div class="team-card" id="team1">
+            <h1>Team 1</h1>
+            <div class="pokemon-imagines">
+                <div class="poke-imagine"></div>
+                <div class="poke-imagine"></div>
+                <div class="poke-imagine"></div>
+                <div class="poke-imagine"></div>
+                <div class="poke-imagine"></div>
+                <div class="poke-imagine"></div>
+            </div>
+            <button class="view-team-btn">View Team</button>
+            <div class="edit-delete-buttons">
+                <button class="edit-btn">Edit</button>
+                <button class="delete-btn">Delete</button>
+            </div>
+        </div>
+
+        <div class="team-card" id="team2">
+            <h1>Team 2</h1>
+            <div class="pokemon-imagines">
+                <div class="poke-imagine"></div>
+                <div class="poke-imagine"></div>
+                <div class="poke-imagine"></div>
+                <div class="poke-imagine"></div>
+                <div class="poke-imagine"></div>
+                <div class="poke-imagine"></div>
+            </div>
+            <button class="view-team-btn">View Team</button>
+            <div class="edit-delete-buttons">
+                <button class="edit-btn">Edit</button>
+                <button class="delete-btn">Delete</button>
+            </div>
+        </div>
+
+        <div class="team-card" id="team3">
+            <h1>Team 3</h1>
+            <div class="pokemon-imagines">
+                <div class="poke-imagine"></div>
+                <div class="poke-imagine"></div>
+                <div class="poke-imagine"></div>
+                <div class="poke-imagine"></div>
+                <div class="poke-imagine"></div>
+                <div class="poke-imagine"></div>
+            </div>
+
+            <button class="view-team-btn">View Team</button>
+            <div class="edit-delete-buttons">
+                <button class="edit-btn">Edit</button>
+                <button class="delete-btn">Delete</button>
+            </div>
+        </div>
+
+        <div class="team-card" id="team4">
+            <h1>Team 4</h1>
+            <div class="pokemon-imagines">
+                <div class="poke-imagine"></div>
+                <div class="poke-imagine"></div>
+                <div class="poke-imagine"></div>
+                <div class="poke-imagine"></div>
+                <div class="poke-imagine"></div>
+                <div class="poke-imagine"></div>
+            </div>
+
+            <button class="view-team-btn">View My Team</button>
+            <div class="edit-delete-buttons">
+                <button class="edit-btn">Edit</button>
+                <button class="delete-btn">Delete</button>
+            </div>
+        </div>
+
+        <div class="team-card" id="team5">
+            <h1>Team 5</h1>
+            <div class="pokemon-imagines">
+                <div class="poke-imagine"></div>
+                <div class="poke-imagine"></div>
+                <div class="poke-imagine"></div>
+                <div class="poke-imagine"></div>
+                <div class="poke-imagine"></div>
+                <div class="poke-imagine"></div>
+            </div>
+
+            <button class="view-team-btn">View My Team</button>
+            <div class="edit-delete-buttons">
+                <button class="edit-btn">Edit</button>
+                <button class="delete-btn">Delete</button>
+            </div>
+        </div>
+
+        <div class="team-card" id="team6">
+            <h1>Team 6</h1>
+            <div class="pokemon-imagines">
+                <div class="poke-imagine"></div>
+                <div class="poke-imagine"></div>
+                <div class="poke-imagine"></div>
+                <div class="poke-imagine"></div>
+                <div class="poke-imagine"></div>
+                <div class="poke-imagine"></div>
+            </div>
+            <button class="view-team-btn">View My Team</button>
+            <div class="edit-delete-buttons">
+                <button class="edit-btn">Edit</button>
+                <button class="delete-btn">Delete</button>
+            </div>
+        </div>
+
+
+    </main>
+
 </body>
+
 </html>
