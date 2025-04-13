@@ -166,13 +166,54 @@
             </div>
 
             <div class="submit btn">
-                <button class="button" type="submit" name="action">
+                <button id="signupBtn" class="button" type="submit" name="action">
                     Sign Up
                 </button>
             </div>
         </div>
     </main>
-    <script src="main.js"></script>
+    <script type="module">
+        import { 
+            getAuth, 
+            createUserWithEmailAndPassword, 
+            setPersistence, 
+            browserLocalPersistence 
+        } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
+        
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-app.js";
+        import firebaseConfig from "./firebaseConfig.js";
+    
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        setPersistence(auth, browserLocalPersistence).catch(console.error);
+    
+ 
+        const signupBtn = document.querySelector('#signupBtn');
+        const emailInput = document.querySelector('#email');
+        const passwordInput = document.querySelector('#password');
+    
+
+        async function signUpWithEmail(email, password) {
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                console.log("User signed up:", userCredential.user);
+                alert("Sign up successful!");
+                window.location.href = "index.html"; 
+            } catch (error) {
+                console.error("Sign-up error:", error);
+                alert("Error: " + error.message);
+            }
+        }
+
+        signupBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const email = emailInput.value;
+            const password = passwordInput.value;
+            signUpWithEmail(email, password);
+        });
+    </script>
+    </script>
 
 </body>
 
