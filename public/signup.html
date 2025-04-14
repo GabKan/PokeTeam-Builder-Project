@@ -7,7 +7,6 @@
     <title>Sign</title>
     <link href="https://fonts.cdnfonts.com/css/pokemon-solid" rel="stylesheet">
     <style>
-
         html {
             height: 100vh;
             width: 100vw;
@@ -35,7 +34,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            
+
         }
 
         .brand-logo {
@@ -104,7 +103,7 @@
 
         .row {
             max-width: 4500px;
-            padding:3rem;
+            padding: 3rem;
             border: 2px solid black;
             border-radius: 8px;
             height: 300px;
@@ -117,6 +116,10 @@
             left: 45%;
             color: yellow;
             text-shadow: 2px 2px blue;
+        }
+
+        .hidden {
+            display: none;
         }
     </style>
 </head>
@@ -132,36 +135,27 @@
                         Logout
                     </button>
                 </li>
-                <li>
-                <li>
-                    <a href="signup.html">
-                        Signup
-                    </a>
-                </li>
-                <li>
-                    <a href="login.html">
-                        Login
-                    </a>
-                </li>
+                <li><a href="#" id="showSignup">Signup</a></li>
+                <li><a href="#" id="showLogin">Login</a></li>
             </ul>
         </div>
     </nav>
 
     <main class="container">
-        <div class="row">
+        <div class="row" id="signupForm">
             <h1 class="center-align">Sign Up</h1>
 
             <div class="signup">
                 <div class="input-field">
-                    <input name="email" id="email" type="email" class="email" required>
-                    <label for="email">Email</label>
+                    <input name="email" id="signupEmail" type="email" required>
+                    <label for="signupEmail">Email</label>
                 </div>
             </div>
 
             <div class="signup">
                 <div class="input-field">
                     <input name="password" id="password" type="password" class="password" required>
-                    <label for="password">Password</label>
+                    <label for="signupPassword">Password</label>
                 </div>
             </div>
 
@@ -171,47 +165,112 @@
                 </button>
             </div>
         </div>
+
+        <div class="row hidden" id="loginForm">
+            <h1 class="center-align">Login</h1>
+
+            <div class="signup">
+                <div class="input-field">
+                    <input name="email" id="loginEmail" type="email" required>
+                    <label for="loginEmail">Email</label>
+                </div>
+            </div>
+
+            <div class="signup">
+                <div class="input-field">
+                    <input name="password" id="loginPassword" type="password" required>
+                    <label for="loginPassword">Password</label>
+                </div>
+            </div>
+
+            <div class="submit btn">
+                <button id="loginBtn" class="button" type="submit" name="action">
+                    Login
+                </button>
+            </div>
+        </div>
     </main>
     <script type="module">
-        import { 
-            getAuth, 
-            createUserWithEmailAndPassword, 
-            setPersistence, 
-            browserLocalPersistence 
-        } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
-        
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-app.js";
+        import {
+            getAuth,
+            createUserWithEmailAndPassword,
+            signInWithEmailAndPassword,
+            setPersistence,
+            browserLocalPersistence
+        } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
+
         import firebaseConfig from "./firebaseConfig.js";
-    
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         setPersistence(auth, browserLocalPersistence).catch(console.error);
-    
- 
+
+
         const signupBtn = document.querySelector('#signupBtn');
-        const emailInput = document.querySelector('#email');
-        const passwordInput = document.querySelector('#password');
-    
+        const loginBtn = document.querySelector('#loginBtn');
+        const showSignup = document.querySelector('#showSignup');
+        const showLogin = document.querySelector('#showLogin');
+        const signupForm = document.querySelector('#signupForm');
+        const loginForm = document.querySelector('#loginForm');
+
+        const signupEmailInput = document.querySelector('#email');
+        const signupPasswordInput = document.querySelector('#password');
+        const loginEmailInput = document.querySelector('#loginEmail');
+        const loginPasswordInput = document.querySelector('#loginPassword');
 
         async function signUpWithEmail(email, password) {
             try {
                 const userCredential = await createUserWithEmailAndPassword(auth, email, password);
                 console.log("User signed up:", userCredential.user);
                 alert("Sign up successful!");
-                window.location.href = "index.html"; 
+                window.location.href = "index.html";
             } catch (error) {
                 console.error("Sign-up error:", error);
                 alert("Error: " + error.message);
             }
         }
-        signupBtn.addEventListener('click', (e) => {
+        function SignupClick(e) {
             e.preventDefault();
-            const email = emailInput.value;
-            const password = passwordInput.value;
+            const email = signupEmailInput.value;
+            const password = signupPasswordInput.value;
             signUpWithEmail(email, password);
-        });
-    </script>
+        }
+
+        async function loginWithEmail(email, password) {
+            try {
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                console.log("User logged in:", userCredential.user);
+                alert("Login successful!");
+                window.location.href = "index.html";
+            } catch (error) {
+                console.error("Login error:", error);
+                alert("Login failed: " + error.message);
+            }
+        }
+
+        function LoginClick(e) {
+            e.preventDefault();
+            const email = loginEmailInput.value;
+            const password = loginPasswordInput.value;
+            loginWithEmail(email, password);
+        }
+
+        function DisplaySignupForm() {
+            signupForm.classList.remove('hidden');
+            loginForm.classList.add('hidden');
+        }
+
+        function DisplayLoginForm() {
+            loginForm.classList.remove('hidden');
+            signupForm.classList.add('hidden');
+        }
+
+
+        signupBtn.addEventListener('click', SignupClick);
+        loginBtn.addEventListener('click', LoginClick);
+        showSignup.addEventListener('click', DisplaySignupForm);
+        showLogin.addEventListener('click', DisplayLoginForm);
     </script>
 
 </body>
