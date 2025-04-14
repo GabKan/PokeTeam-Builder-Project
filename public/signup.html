@@ -80,6 +80,7 @@
             font-size: 20px;
             text-transform: uppercase;
             width: 100%;
+            cursor: pointer;
         }
 
         .signup {
@@ -120,6 +121,20 @@
 
         .hidden {
             display: none;
+        }
+
+        .proceed-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 200px;
+            background-color: black;
+            color: white;
+            border: none;
+            padding: 8px;
+            font-size: 15px;
+            text-transform: uppercase;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -191,10 +206,10 @@
         </div>
     </main>
     <script type="module">
-        import { 
-            signUpWithEmail, 
-            loginWithEmail, 
-            logout 
+        import {
+            signUpWithEmail,
+            loginWithEmail,
+            logout
         } from "./auth.js";
 
         const signupBtn = document.querySelector('#signupBtn');
@@ -250,6 +265,10 @@
         showSignup.addEventListener('click', DisplaySignupForm);
         showLogin.addEventListener('click', DisplayLoginForm);
     </script>
+
+    <button class="proceed-button" onclick="window.location.href='index.html'">
+        Proceed without signing up
+    </button>
 
 </body>
 
