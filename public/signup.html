@@ -80,6 +80,7 @@
             font-size: 20px;
             text-transform: uppercase;
             width: 100%;
+            cursor: pointer;
         }
 
         .signup {
@@ -121,13 +122,27 @@
         .hidden {
             display: none;
         }
+
+        .proceed-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 200px;
+            background-color: black;
+            color: white;
+            border: none;
+            padding: 8px;
+            font-size: 15px;
+            text-transform: uppercase;
+            cursor: pointer;
+        }
     </style>
 </head>
 
 <body>
     <nav class="red">
         <div class="nav-bar">
-            <a href="#" class="brand-logo"> Welcome to Pokemon Team Builder <span id="user"></span></a>
+            <a href="index.html" class="brand-logo"> Welcome to Pokemon Team Builder <span id="user"></span></a>
             <h1 class="pokemon-font">Pokémon</h1>
             <ul class="right">
                 <li>
@@ -191,21 +206,11 @@
         </div>
     </main>
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-app.js";
         import {
-            getAuth,
-            createUserWithEmailAndPassword,
-            signInWithEmailAndPassword,
-            setPersistence,
-            browserLocalPersistence
-        } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
-
-        import firebaseConfig from "./firebaseConfig.js";
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        setPersistence(auth, browserLocalPersistence).catch(console.error);
-
+            signUpWithEmail,
+            loginWithEmail,
+            logout
+        } from "./auth.js";
 
         const signupBtn = document.querySelector('#signupBtn');
         const loginBtn = document.querySelector('#loginBtn');
@@ -214,46 +219,35 @@
         const signupForm = document.querySelector('#signupForm');
         const loginForm = document.querySelector('#loginForm');
 
-        const signupEmailInput = document.querySelector('#email');
+        const signupEmailInput = document.querySelector('#signupEmail');
         const signupPasswordInput = document.querySelector('#password');
         const loginEmailInput = document.querySelector('#loginEmail');
         const loginPasswordInput = document.querySelector('#loginPassword');
 
-        async function signUpWithEmail(email, password) {
-            try {
-                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-                console.log("User signed up:", userCredential.user);
-                alert("Sign up successful!");
-                window.location.href = "index.html";
-            } catch (error) {
-                console.error("Sign-up error:", error);
-                alert("Error: " + error.message);
-            }
-        }
-        function SignupClick(e) {
+        async function SignupClick(e) {
             e.preventDefault();
             const email = signupEmailInput.value;
             const password = signupPasswordInput.value;
-            signUpWithEmail(email, password);
-        }
-
-        async function loginWithEmail(email, password) {
             try {
-                const userCredential = await signInWithEmailAndPassword(auth, email, password);
-                console.log("User logged in:", userCredential.user);
-                alert("Login successful!");
+                await signUpWithEmail(email, password);
+                alert("Sign up successful!");
                 window.location.href = "index.html";
             } catch (error) {
-                console.error("Login error:", error);
-                alert("Login failed: " + error.message);
+                alert("Error: " + error.message);
             }
         }
 
-        function LoginClick(e) {
+        async function LoginClick(e) {
             e.preventDefault();
             const email = loginEmailInput.value;
             const password = loginPasswordInput.value;
-            loginWithEmail(email, password);
+            try {
+                await loginWithEmail(email, password);
+                alert("Login successful!");
+                window.location.href = "index.html";
+            } catch (error) {
+                alert("Login failed: " + error.message);
+            }
         }
 
         function DisplaySignupForm() {
@@ -266,12 +260,15 @@
             signupForm.classList.add('hidden');
         }
 
-
         signupBtn.addEventListener('click', SignupClick);
         loginBtn.addEventListener('click', LoginClick);
         showSignup.addEventListener('click', DisplaySignupForm);
         showLogin.addEventListener('click', DisplayLoginForm);
     </script>
+
+    <button class="proceed-button" onclick="window.location.href='index.html'">
+        Proceed without signing up
+    </button>
 
 </body>
 
