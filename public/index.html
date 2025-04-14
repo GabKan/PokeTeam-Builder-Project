@@ -23,9 +23,11 @@
         <section id="pk1" class="card">
             <div class="poke_info">
                 <label>Pokemon Name</label>
-                <input type="text" onclick="display_list(1)" onkeyup="filterPokemon(1)" placeholder="Name" id="pokeSearch1">
-                <ul id="pokeList1" class="list">
-                </ul>
+                <div class="search-container">
+                    <input type="text" onclick="display_list(1)" onkeyup="filterPokemon(1)" placeholder="Name" id="pokeSearch1">
+                    <ul id="pokeList1" class="list">
+                    </ul>
+                </div>
 
                 <label>Nickname</label>
                 <input type="text" class="nickname" placeholder="Nickname(Optional)">
@@ -49,8 +51,7 @@
                         </div>
                     </div>
                 </div>
-                <label>Pokemon Type</label>
-                <input type="text" placeholder="Type">
+                <label>Pokemon Type: <span id="poke_type1"></span></label>
             </div>
 
         </section>

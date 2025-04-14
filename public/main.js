@@ -1,5 +1,7 @@
 let pokemon_url = [];
-let pokemon=[];
+let pokemon_arr=[];
+let poke_team=[];
+let type_relations=[];
 
 function display_pokemon() {
     for(let pokemon of pokemon_url)
@@ -9,13 +11,33 @@ function display_pokemon() {
 function display_list(list_num){
     let list=document.querySelector(`#pokeList${list_num}`);
     let html='';
-    for(let i=0;i<pokemon.length;i++){
-       html += `<li><a href="#" onclick="display_pokemon_info(${i})">${pokemon[i].name}</a></li>`
+    for(let i=0;i<pokemon_arr.length;i++){
+       html += `<li><a href="#" onclick="display_pokemon_info(${i}, ${list_num})">${pokemon_arr[i].name}</a></li>`
     }
     list.innerHTML=html;
 }
 
-function display_pokemon_info(id){
+async function display_pokemon_info(id, list_num){
+    let pokemon=await get_pokemon(id);
+    poke_team[id-1]=pokemon;
+   
+    let img=document.querySelector(`#pk_img${list_num}`);
+    img.innerHTML= `<img src=${pokemon.sprites.front_default} class="sprite"></img>`;
+
+    let name=document.querySelector(`#pokeSearch${list_num}`);
+    name.value= pokemon_arr[id].name;
+
+    const list=document.querySelector(`#pokeList${list_num}`);
+    list.innerHTML="";
+
+    let type=document.querySelector(`#poke_type${list_num}`);
+    type.innerHTML=`${pokemon.types[0].type.name}`;
+
+    if(pokemon.types.length==2)
+    {
+        let type2=document.querySelector(`#poke_type${list_num}`);
+        type2.innerHTML=`${pokemon.types[0].type.name} / ${pokemon.types[1].type.name}`; //should change to either img or style the types
+    }    
 
 }
 
@@ -25,12 +47,13 @@ async function get_all_pokemon() {
     const data = await response.json();
 
     for(let result of data.results) {
-       pokemon_url.push(result.url);
-        pokemon.push(result);
+        pokemon_url.push(result.url);
+        pokemon_arr.push(result);
     }
 
     //display_pokemon();
 }
+
 
 async function get_pokemon(id) {
     const response = await fetch(pokemon_url[id]);
