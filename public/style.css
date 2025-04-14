@@ -99,7 +99,8 @@ input {
 
 .type-category h2,
 .type-category h3,
-.type-category h4 {
+.type-category h4,
+.type-category h5{
     margin-top: 0;
     color: red;
     font-size: 20px;
