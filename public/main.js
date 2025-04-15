@@ -72,44 +72,60 @@ function display_team_relations(){
         console.log(type_weakness[i].img)
         if(type_weakness[i].value===1){
             weak_html+=`
-            <img src="${type_weakness[i].img}" alt="${type_weakness[i].name}" class="type_image">`
+            <div class="type-against">
+            <img src="${type_weakness[i].img}" alt="${type_weakness[i].name}" class="type_image">
+            </div>`
         }
         else if(type_weakness[i].value>1){
             weak_html+=`
+            <div class="type-against">
             <img src="${type_weakness[i].img}" alt="${type_weakness[i].name}" class="type_image">
-            <p>x${type_weakness[i].value}</p>`
+            <p>x${type_weakness[i].value}</p>
+            </div>`
         }
         else if(type_weakness[i].value===-1){
             res_html+=`
-            <img src="${type_weakness[i].img}" alt="${type_weakness[i].name}" class="type_image">`
+            <div class="type-against">
+            <img src="${type_weakness[i].img}" alt="${type_weakness[i].name}" class="type_image">
+            </div>`
         }
         else if(type_weakness[i].value<-1){
             type_weakness[i].value=Math.abs(type_weakness[i].value);
             res_html+=`
+            <div class="type-against">
             <img src="${type_weakness[i].img}" alt="${type_weakness[i].name}" class="type_image">
-            <p>x${type_weakness[i].value}</p>`;
+            <p>x${type_weakness[i].value}</p>
+            </div>`;
         }
             
 
         if(super_effective[i].value===1){
             super_html+=`
-            <img src="${super_effective[i].img}" alt="${super_effective[i].name}" class="type_image">`
+            <div class="type-against">
+            <img src="${super_effective[i].img}" alt="${super_effective[i].name}" class="type_image">
+            </div>`
         }
         else if(super_effective[i].value>1){
             super_html+=`
+            <div class="type-against">
             <img src="${super_effective[i].img}" alt="${super_effective[i].name}" class="type_image">
-            <p> x${super_effective[i].value}</p>`
+            <p> x${super_effective[i].value}</p>
+            </div>`
         }
 
         if(resists_type[i].value + super_effective[i].value==-1){
             res_by_html+=`
-            <img src="${resists_type[i].img}" alt="${resists_type[i].name}" class="type_image">`
+            <div class="type-against">
+            <img src="${resists_type[i].img}" alt="${resists_type[i].name}" class="type_image">
+            </div>`
         }
         else if(resists_type[i].value + super_effective[i].value<-1){
             resists_type[i].value=Math.abs(resists_type[i].value)
             res_by_html+=`
+            <div class="type-against">
             <img src="${super_effective[i].img}" alt="${super_effective[i].name}" class="type_image">
-            <p> x${resists_type[i].value}</p>`
+            <p> x${resists_type[i].value}</p>
+            </div>`
         }
         resists_type[i].value=0;
         super_effective[i].value=0;
