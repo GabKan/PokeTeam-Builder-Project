@@ -5,9 +5,9 @@ let type_weakness=[];
 let super_effective=[];
 let resists_type=[];
 for (let i = 0; i < 18; i++) {
-    type_weakness.push({ name: "", value: 0 });
-    super_effective.push({ name: "", value: 0 });
-    resists_type.push({ name: "", value: 0 });
+    type_weakness.push({ name: "", value: 0, img:""});
+    super_effective.push({ name: "", value: 0, img:"" });
+    resists_type.push({ name: "", value: 0, img:"" });
 }
 
 function display_pokemon() {
@@ -38,11 +38,22 @@ async function display_pokemon_info(id, list_num){
     list.innerHTML="";
 
     let type=document.querySelector(`#poke_type${list_num}`);
-    type.innerHTML=`${pokemon.types[0].type.name}`;
+    let type1="";
+    for(let rec of type_weakness){
+        if (rec.name===pokemon.types[0].type.name)
+            type1=rec.img;
+    }
+
+    type.innerHTML=`<img src="${type1}" alt=p${list_num}_t1>`;
 
     if(pokemon.types.length==2)
     {
-        type.innerHTML=`${pokemon.types[0].type.name} / ${pokemon.types[1].type.name}`; //should change to either img or style the types
+        let type2="";
+        for(let rec of type_weakness){
+            if (rec.name===pokemon.types[1].type.name)
+                type2=rec.img;
+        }   
+        type.innerHTML+=`<img src="${type2}" alt=p${list_num}_t2>`; 
     }    
 
 }
@@ -54,41 +65,57 @@ function display_team_relations(){
     let res_html='';
     let super_eff=document.querySelector('#super-effective');
     let super_html='';
+    let resisted=document.querySelector('#resisted');
+    let res_by_html='';
 
-    for(let rec of type_weakness){
-        console.log(rec.name);
-        if(rec.value===1){
+    for(let i=0;i<18; i++){
+        console.log(type_weakness[i].img)
+        if(type_weakness[i].value===1){
             weak_html+=`
-            <p>${rec.name} </p>`
+            <img src="${type_weakness[i].img}" alt="${type_weakness[i].name}" class="type_image">`
         }
-        else if(rec.value>1){
+        else if(type_weakness[i].value>1){
             weak_html+=`
-            <p>${rec.name} x${rec.value}</p>`
+            <img src="${type_weakness[i].img}" alt="${type_weakness[i].name}" class="type_image">
+            <p>x${type_weakness[i].value}</p>`
         }
-        else if(rec.value===-1){
+        else if(type_weakness[i].value===-1){
             res_html+=`
-            <p>${rec.name} </p>`
+            <img src="${type_weakness[i].img}" alt="${type_weakness[i].name}" class="type_image">`
         }
-        else if(rec.value<-1){
-            rec.value=Math.abs(rec.value);
+        else if(type_weakness[i].value<-1){
+            type_weakness[i].value=Math.abs(type_weakness[i].value);
             res_html+=`
-            <p>${rec.name} x${rec.value}</p>`;
+            <img src="${type_weakness[i].img}" alt="${type_weakness[i].name}" class="type_image">
+            <p>x${type_weakness[i].value}</p>`;
         }
-        rec.value=0;
-    }
+            
 
-    for(let rec of super_effective){
-        if(rec.value===1){
+        if(super_effective[i].value===1){
             super_html+=`
-            <p>${rec.name} </p>`
+            <img src="${super_effective[i].img}" alt="${super_effective[i].name}" class="type_image">`
         }
-        else if(rec.value>1){
+        else if(super_effective[i].value>1){
             super_html+=`
-            <p>${rec.name} x${rec.value}</p>`
+            <img src="${super_effective[i].img}" alt="${super_effective[i].name}" class="type_image">
+            <p> x${super_effective[i].value}</p>`
         }
-        rec.value=0;
-    }
 
+        if(resists_type[i].value + super_effective[i].value==-1){
+            res_by_html+=`
+            <img src="${resists_type[i].img}" alt="${resists_type[i].name}" class="type_image">`
+        }
+        else if(resists_type[i].value + super_effective[i].value<-1){
+            resists_type[i].value=Math.abs(resists_type[i].value)
+            res_by_html+=`
+            <img src="${super_effective[i].img}" alt="${super_effective[i].name}" class="type_image">
+            <p> x${resists_type[i].value}</p>`
+        }
+        resists_type[i].value=0;
+        super_effective[i].value=0;
+        type_weakness[i].value=0;
+    }
+    resisted.innerHTML=res_by_html;
     super_eff.innerHTML=super_html;
     resistances.innerHTML=res_html;
     weaknesses.innerHTML=weak_html;
@@ -415,8 +442,20 @@ async function get_types(){
     const t_data=await t_response.json();
 
     for(let i=0;i<18;i++){
+        const type_img_response=await fetch(t_data.results[i].url);
+        const type_img_data=await type_img_response.json();
+
+        const sprite=type_img_data.sprites["generation-vi"]["x-y"].name_icon;
+
+
         type_weakness[i].name=t_data.results[i].name;
+        type_weakness[i].img=sprite;
+
         super_effective[i].name=t_data.results[i].name;
+        super_effective[i].img=sprite;
+
+        resists_type[i].name=t_data.results[i].name;
+        resists_type[i].img=sprite;
     }
 }
 
@@ -474,7 +513,7 @@ async function main() {
 }
 
 function filterPokemon(list_num){
-    let input=document.getElementById("pokeSearch1");
+    let input=document.getElementById(`pokeSearch${list_num}`);
     let capInput=input.value.toUpperCase();
     let ul=document.getElementById(`pokeList${list_num}`);
     let li=ul.getElementsByTagName("li");

@@ -195,3 +195,12 @@ input[type="text"] {
     background-color:rgb(235, 224, 224);
     border-radius:8px;
 }
+
+.type_line{
+    display:inline-flex;
+    align-items:center;
+    gap:5px;
+    width:100%;
+    overflow:auto;
+
+}

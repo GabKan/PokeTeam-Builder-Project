@@ -52,7 +52,9 @@
                         </div>
                     </div>
                 </div>
-                <label>Pokemon Type: <span id="poke_type1"></span></label>
+                <label>Pokemon Type: </label>
+                <div id="poke_type1">
+                </div>
             </div>
 
         </section>
@@ -60,7 +62,11 @@
         <section id="pk2" class="card">
             <div class="poke_info">
                 <label>Pokemon Name</label>
-                <input type="text" placeholder="Name">
+                <div class="search-container">
+                    <input type="text" onclick="display_list(2)" onkeyup="filterPokemon(2)" placeholder="Name" id="pokeSearch2">
+                    <ul id="pokeList2" class="list">
+                    </ul>
+                </div>
 
             <label>Nickname</label>
             <input type="text" class="nickname" placeholder="Nickname(Optional)">
@@ -84,12 +90,12 @@
                         </div>
                     </div>
                 </div>
-                <label>Pokemon Type</label>
-                <input type="text" placeholder="Type">
+                <label>Pokemon Type: </label>
+                <div id="poke_type2">
+                </div>
             </div>
 
         </section>
-
 
         <section id="pk3" class="card">
             <div class="poke_info">
@@ -230,21 +236,21 @@
     <div class="type-container">
         <div class="type-category">
             <h2>Weaknesses</h2>
-            <div id="weaknesses"></div>
+            <div id="weaknesses" class="type_line"></div>
         </div>
 
         <div class="type-category">
             <h3>Super-Effective</h3>
-            <div id="supper-effective"></div>
+            <div id="super-effective" class="type_line"></div>
         </div>
 
         <div class="type-category">
             <h4>Resistances</h4>
-            <div id="resistances"></div>
+            <div id="resistances" class="type_line"></div>
         </div>
         <div class="type-category">
-            <h5>Resisted</h5>
-            <div id="resisted"></div>
+            <h5>Resisted By</h5>
+            <div id="resisted" class="type_line"></div>
         </div>
     </div>
 
