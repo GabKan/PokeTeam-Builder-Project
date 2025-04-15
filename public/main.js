@@ -19,7 +19,7 @@ function display_list(list_num){
     let list=document.querySelector(`#pokeList${list_num}`);
     let html='';
     for(let i=0;i<pokemon_arr.length;i++){
-       html += `<li><a href="#" onclick="display_pokemon_info(${i}, ${list_num})">${pokemon_arr[i].name}</a></li>`
+       html += `<li><a href="#" onclick="display_pokemon_info(${i}, ${list_num})" class="list_data">${pokemon_arr[i].name}</a></li>`
     }
     list.innerHTML=html;
 }
@@ -44,7 +44,7 @@ async function display_pokemon_info(id, list_num){
             type1=rec.img;
     }
 
-    type.innerHTML=`<img src="${type1}" alt=p${list_num}_t1>`;
+    type.innerHTML=`<img src="${type1}" alt="p${list_num}_type1" class="type_image">`;
 
     if(pokemon.types.length==2)
     {
@@ -53,7 +53,7 @@ async function display_pokemon_info(id, list_num){
             if (rec.name===pokemon.types[1].type.name)
                 type2=rec.img;
         }   
-        type.innerHTML+=`<img src="${type2}" alt=p${list_num}_t2>`; 
+        type.innerHTML+=`<img src="${type2}" alt="p${list_num}_type2" class="type_image">`; 
     }    
 
 }
