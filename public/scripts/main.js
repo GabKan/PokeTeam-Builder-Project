@@ -52,20 +52,6 @@ async function display_moves(index, pokemon) {
     }
 }
 
-async function display_moves(index, pokemon) {
-    let moves = pokemon.moves;
-
-    let dropdowns = document.getElementsByClassName(`move_dropdown${index}`);
-    for(let dropdown of dropdowns){
-        let html = `<option value="">Select Move</option>`;
-        for(let move of moves) {
-            let move_name = move.move.name;
-            html += `<option value="${move_name}">${move_name}</option>`;
-        }
-        dropdown.innerHTML = html;
-    }
-}
-
 async function display_pokemon_info(id, list_num){
     let pokemon=await get_pokemon(id);
     poke_team[list_num-1]=pokemon;
