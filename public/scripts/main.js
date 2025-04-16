@@ -13,13 +13,43 @@ for (let i = 0; i < 18; i++) {
     resists_type.push({ name: "", value: 0, img:"" });
 }
 
-function display_list(list_num){
-    let list=document.querySelector(`#pokeList${list_num}`);
-    let html='';
-    for(let i=0;i<pokemon_arr.length;i++){
-       html += `<li class="pokeListItem"><a href="#" onclick="display_pokemon_info(${i}, ${list_num})" class="list_data">${pokemon_arr[i].name}</a></li>`
+function display_pokemon() {
+    for(let pokemon of pokemon_url)
+        console.log(pokemon);
+}
+
+
+async function display_list(list_num) {
+    let list = document.querySelector(`#pokeList${list_num}`);
+    let html = '';
+    
+    for (let i = 0; i < pokemon_arr.length; i++) {
+        const pokemon = await get_pokemon(i); 
+        
+        html += `
+        <li>
+            <a href="#" onclick="display_pokemon_info(${i}, ${list_num})" class="list_data">
+                <img src="${pokemon.sprites.front_default}" class="pokemon-icon">
+                ${pokemon_arr[i].name}
+            </a>
+        </li>`;
     }
-    list.innerHTML=html;
+    
+    list.innerHTML = html;
+}
+
+async function display_moves(index, pokemon) {
+    let moves = pokemon.moves;
+
+    let dropdowns = document.getElementsByClassName(`move_dropdown${index}`);
+    for(let dropdown of dropdowns){
+        let html = `<option value="">Select Move</option>`;
+        for(let move of moves) {
+            let move_name = move.move.name;
+            html += `<option value="${move_name}">${move_name}</option>`;
+        }
+        dropdown.innerHTML = html;
+    }
 }
 
 async function display_moves(index, pokemon) {
