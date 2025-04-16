@@ -15,13 +15,24 @@ function display_pokemon() {
         console.log(pokemon);
 }
 
-function display_list(list_num){
-    let list=document.querySelector(`#pokeList${list_num}`);
-    let html='';
-    for(let i=0;i<pokemon_arr.length;i++){
-       html += `<li><a href="#" onclick="display_pokemon_info(${i}, ${list_num})" class="list_data">${pokemon_arr[i].name}</a></li>`
+
+async function display_list(list_num) {
+    let list = document.querySelector(`#pokeList${list_num}`);
+    let html = '';
+    
+    for (let i = 0; i < pokemon_arr.length; i++) {
+        const pokemon = await get_pokemon(i); 
+        
+        html += `
+        <li>
+            <a href="#" onclick="display_pokemon_info(${i}, ${list_num})" class="list_data">
+                <img src="${pokemon.sprites.front_default}" class="pokemon-icon">
+                ${pokemon_arr[i].name}
+            </a>
+        </li>`;
     }
-    list.innerHTML=html;
+    
+    list.innerHTML = html;
 }
 
 async function display_pokemon_info(id, list_num){

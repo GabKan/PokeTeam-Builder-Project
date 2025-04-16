@@ -201,7 +201,7 @@ input[type="text"] {
 .list{
     display: none;   
     position:absolute;
-    background-color:rgb(228, 226, 226);
+    background-color:white;
     border-radius: 8px;
     max-height: 400px;        
     z-index:100;
@@ -209,14 +209,30 @@ input[type="text"] {
     overflow-y: auto;
 }
 
+.list li {
+    list-style-type: none;
+}
+
 .list_data{
     text-decoration: none;
     font-size:larger;
     color:rgb(18, 17, 17);
+    display: flex;                      
+    padding: 8px 12px;          
+    gap: 10px; 
+    align-items: center;
 }
 
-.list:empty{
-    display:none;
+.list_data:hover {
+    background-color: #f0f0f0;
+    border-radius: 6px;
+}
+
+.pokemon-icon {
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+    object-fit: contain;
 }
 
 .search-container{
@@ -236,5 +252,5 @@ input[type="text"] {
     gap:5px;
     width:100%;
     overflow:auto;
-
 }
+
