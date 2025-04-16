@@ -36,6 +36,13 @@ async function display_list(list_num) {
     }
     
     list.innerHTML = html;
+
+    document.addEventListener('click', function handleClickOutside(event) {
+        if (!list.contains(event.target) && event.target.id !== `pokeSearch${list_num}`) {
+            list.style.display = 'none';
+            document.removeEventListener('click', handleClickOutside);
+        }
+    });
 }
 
 async function display_moves(index, pokemon) {
@@ -84,9 +91,8 @@ async function display_pokemon_info(id, list_num){
         type.innerHTML+=`<img src="${type2}" alt="p${list_num}_type2" class="type_image">`; 
     }    
 
-    for(let i=0;i<6;i++){
-        await display_moves(i + 1, pokemon);
-    }
+
+    await display_moves(list_num, pokemon);
 }
 
 function display_team_relations(){
@@ -548,7 +554,7 @@ async function main() {
     await get_all_pokemon();
     await get_types();
 
-    get_pokemon(pokemon_id);
+   // get_pokemon(pokemon_id);   pokemon id not defined
 }
 
 main();

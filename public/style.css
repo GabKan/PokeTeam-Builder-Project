@@ -207,10 +207,18 @@ input[type="text"] {
     z-index:100;
     width:60%;
     overflow-y: auto;
+    list-style-type: none;
 }
 
 .list li {
     list-style-type: none;
+    list-style:none;
+    padding-left:0;
+    margin-left:0;
+}
+
+.list li::marker{
+    content:"";
 }
 
 .list_data{
