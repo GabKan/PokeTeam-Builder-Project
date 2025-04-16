@@ -1,27 +1,39 @@
 let pokemon_url = [];
-let pokemon_arr=[];
-let poke_team=[];
-let type_weakness=[];
-let super_effective=[];
-let resists_type=[];
+let pokemon_arr = [];
+
+let poke_team = [];
+
+let type_weakness = [];
+let super_effective = [];
+let resists_type = [];
+
 for (let i = 0; i < 18; i++) {
     type_weakness.push({ name: "", value: 0, img:""});
     super_effective.push({ name: "", value: 0, img:"" });
     resists_type.push({ name: "", value: 0, img:"" });
 }
 
-function display_pokemon() {
-    for(let pokemon of pokemon_url)
-        console.log(pokemon);
-}
-
 function display_list(list_num){
     let list=document.querySelector(`#pokeList${list_num}`);
     let html='';
     for(let i=0;i<pokemon_arr.length;i++){
-       html += `<li><a href="#" onclick="display_pokemon_info(${i}, ${list_num})" class="list_data">${pokemon_arr[i].name}</a></li>`
+       html += `<li class="pokeListItem"><a href="#" onclick="display_pokemon_info(${i}, ${list_num})" class="list_data">${pokemon_arr[i].name}</a></li>`
     }
     list.innerHTML=html;
+}
+
+async function display_moves(index, pokemon) {
+    let moves = pokemon.moves;
+
+    let dropdowns = document.getElementsByClassName(`move_dropdown${index}`);
+    for(let dropdown of dropdowns){
+        let html = `<option value="">Select Move</option>`;
+        for(let move of moves) {
+            let move_name = move.move.name;
+            html += `<option value="${move_name}">${move_name}</option>`;
+        }
+        dropdown.innerHTML = html;
+    }
 }
 
 async function display_pokemon_info(id, list_num){
@@ -56,6 +68,9 @@ async function display_pokemon_info(id, list_num){
         type.innerHTML+=`<img src="${type2}" alt="p${list_num}_type2" class="type_image">`; 
     }    
 
+    for(let i=0;i<6;i++){
+        await display_moves(i + 1, pokemon);
+    }
 }
 
 function display_team_relations(){
@@ -484,48 +499,13 @@ async function get_all_pokemon() {
         pokemon_url.push(result.url);
         pokemon_arr.push(result);
     }
-
-    //display_pokemon();
 }
-
 
 async function get_pokemon(id) {
     const response = await fetch(pokemon_url[id]);
     const data = await response.json();
 
     return data;
-}
-
-async function post_data(url, data) {
-    try{
-        let response = await fetch(
-            url, {
-                method: 'POST',
-                body: JSON.stringify(data),
-                headers: { 'Content-Type':'application/json' }
-            },
-        );        
-        let result = await response.json();
-        console.log(result);      
-    }catch(error){
-        console.log(error);
-    }
-}
-
-function submit(event) {
-    event.preventDefault();
-
-    const form = event.target;
-    const form_data = new FormData(form);
-    const data = Object.fromEntries(form_data);
-
-    post_data("https://my-firebase.json", data);
-}
-
-async function main() {
-    await get_all_pokemon();
-    await get_types();
-    document.forms['my-form'].addEventListener('submit', submit);
 }
 
 function filterPokemon(list_num){
@@ -546,7 +526,13 @@ function filterPokemon(list_num){
         else
             i.style.display="none";
     }
-        
+}
+
+async function main() {
+    await get_all_pokemon();
+    await get_types();
+
+    get_pokemon(pokemon_id);
 }
 
 main();

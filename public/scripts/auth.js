@@ -9,7 +9,7 @@ import {
   createUserWithEmailAndPassword, 
   signInWithEmailAndPassword 
 } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
-import firebaseConfig from "./firebaseConfig.js";
+import firebaseConfig from "../firebaseConfig.js";
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth();
@@ -33,6 +33,7 @@ async function signUpWithEmail(email, password) {
     return userCredential.user;
   } catch (error) {
     console.error("Sign-up error:", error);
+    throw error;
   }
 }
 
@@ -43,6 +44,7 @@ async function loginWithEmail(email, password) {
     return userCredential.user;
   } catch (error) {
     console.error("Login error:", error);
+    throw error;
   }
 }
 
@@ -53,6 +55,7 @@ async function signInAnonymouslyUser() {
     return user;
   } catch (error) {
     console.error("Anonymous sign-in error:", error);
+    throw error;
   }
 }
 
@@ -61,6 +64,7 @@ async function logout() {
     await signOut(auth);
   } catch (error) {
     console.error('Error signing out', error);
+    throw error;
   }
 }
 
