@@ -207,16 +207,35 @@ input[type="text"] {
     z-index:100;
     width:60%;
     overflow-y: auto;
+    list-style-type: none;
 }
 
 .list_data{
     text-decoration: none;
     font-size:larger;
     color:rgb(18, 17, 17);
+    display: flex;                      
+    padding: 8px 12px;          
+    gap: 10px; 
+    align-items: center;
+    margin-right: 50px;
 }
 
 .list:empty{
     display:none;
+}
+
+.list_data:hover {
+    background-color: #f0f0f0;
+    border-radius: 10px;
+}
+
+.pokemon-icon {
+    width: 70px;
+    height: 70px;
+    margin-right: 10px;
+    object-fit: contain;
+
 }
 
 .search-container{
@@ -236,9 +255,4 @@ input[type="text"] {
     gap:5px;
     width:100%;
     overflow:auto;
-
-}
-
-.pokeListItem {
-    list-style-type: none;
 }
