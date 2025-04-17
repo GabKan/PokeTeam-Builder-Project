@@ -32,7 +32,7 @@ async function display_list(list_num) {
         html += `
         <li>
             <a href="#" onclick="display_pokemon_info(${i}, ${list_num})" class="list_data">
-                <img src="${pokemon.sprite}" class="pokemon-icon">
+                <img src="${pokemon.sprite}" class="pokemon-icon"style="width: 50px; height: 50px;">
                 ${pokemon_arr[i].name}
             </a>
         </li>`;
