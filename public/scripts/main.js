@@ -1,5 +1,6 @@
 let pokemon_url = [];
 let pokemon_arr = [];
+let pokemon_data = [];
 
 let poke_team = [];
 
@@ -18,18 +19,20 @@ function display_pokemon() {
         console.log(pokemon);
 }
 
-
 async function display_list(list_num) {
     let list = document.querySelector(`#pokeList${list_num}`);
     let html = '';
     
     for (let i = 0; i < pokemon_arr.length; i++) {
         const pokemon = await get_pokemon(i); 
+
+        if (!pokemon.sprite)
+            console.warn(`Missing sprite for Pokémon: ${pokemon.name}`);
         
         html += `
         <li>
             <a href="#" onclick="display_pokemon_info(${i}, ${list_num})" class="list_data">
-                <img src="${pokemon.sprites.front_default}" class="pokemon-icon">
+                <img src="${pokemon.sprite}" class="pokemon-icon">
                 ${pokemon_arr[i].name}
             </a>
         </li>`;
@@ -52,45 +55,42 @@ async function display_moves(index, pokemon) {
     for(let dropdown of dropdowns){
         let html = `<option value="">Select Move</option>`;
         for(let move of moves) {
-            let move_name = move.move.name;
-            html += `<option value="${move_name}">${move_name}</option>`;
+            html += `<option value="${move}">${move}</option>`;
         }
         dropdown.innerHTML = html;
     }
 }
 
 async function display_pokemon_info(id, list_num){
-    let pokemon=await get_pokemon(id);
-    poke_team[list_num-1]=pokemon;
+    let pokemon = await get_pokemon(id);
+    poke_team[list_num-1] = pokemon;
    
-    let img=document.querySelector(`#pk_img${list_num}`);
-    img.innerHTML= `<img src=${pokemon.sprites.front_default} class="sprite"></img>`;
+    let img = document.querySelector(`#pk_img${list_num}`);
+    img.innerHTML = `<img src=${pokemon.sprite} class="sprite"></img>`;
 
-    let name=document.querySelector(`#pokeSearch${list_num}`);
-    name.value= pokemon_arr[id].name;
+    let name = document.querySelector(`#pokeSearch${list_num}`);
+    name.value = pokemon.name;
 
-    const list=document.querySelector(`#pokeList${list_num}`);
-    list.innerHTML="";
+    const list = document.querySelector(`#pokeList${list_num}`);
+    list.innerHTML = "";
 
-    let type=document.querySelector(`#poke_type${list_num}`);
-    let type1="";
+    let type = document.querySelector(`#poke_type${list_num}`);
+    let type1 = "";
     for(let rec of type_weakness){
-        if (rec.name===pokemon.types[0].type.name)
-            type1=rec.img;
+        if (rec.name === pokemon.type_name_1)
+            type1 = rec.img;
     }
 
     type.innerHTML=`<img src="${type1}" alt="p${list_num}_type1" class="type_image">`;
 
-    if(pokemon.types.length==2)
-    {
-        let type2="";
+    if(pokemon.type_length === 2) {
+        let type2 = "";
         for(let rec of type_weakness){
-            if (rec.name===pokemon.types[1].type.name)
-                type2=rec.img;
+            if (rec.name === pokemon.type_name_2)
+                type2 = rec.img;
         }   
         type.innerHTML+=`<img src="${type2}" alt="p${list_num}_type2" class="type_image">`; 
     }    
-
 
     await display_moves(list_num, pokemon);
 }
@@ -106,7 +106,6 @@ function display_team_relations(){
     let res_by_html='';
 
     for(let i=0;i<18; i++){
-        console.log(type_weakness[i].img)
         if(type_weakness[i].value===1){
             weak_html+=`
             <div class="type-against">
@@ -483,9 +482,9 @@ function calc_type_relations(type){
 
 function calc_team(){
     for(let pk of poke_team){
-        calc_type_relations(pk.types[0].type.name);
-        if(pk.types.length==2)
-            calc_type_relations(pk.types[1].type.name);
+        calc_type_relations(pk.type_name_1);
+        if(pk.type_length == 2)
+            calc_type_relations(pk.type_name_2);
     }
     display_team_relations();
 }
@@ -523,11 +522,52 @@ async function get_all_pokemon() {
     }
 }
 
-async function get_pokemon(id) {
-    const response = await fetch(pokemon_url[id]);
-    const data = await response.json();
+async function load_pokemon() {
+    for (let i = 0; i < pokemon_url.length; i++) {
+        try {
+            let response = await fetch(pokemon_url[i]);
+            let pokemon = await response.json();
 
-    return data;
+            let sprite = pokemon.sprites.front_default;
+            let name = pokemon.name;
+            let type_length = pokemon.types.length;
+            let type_name_1 = pokemon.types[0].type.name;
+
+            let moves = []
+            for (let move of pokemon.moves)
+                moves.push(move.move.name);
+
+            if (type_length === 1) {
+                pokemon_data.push({
+                    sprite: sprite,
+                    name: name,
+                    moves: moves,
+                    type_length: type_length,
+                    type_name_1: type_name_1
+                });
+            } else if (type_length === 2) {
+                let type_name_2 = pokemon.types[1].type.name;
+                pokemon_data.push({
+                    sprite: sprite,
+                    name: name,
+                    moves: moves,
+                    type_length: type_length,
+                    type_name_1: type_name_1,
+                    type_name_2: type_name_2
+                });
+            }
+
+
+        } catch (error) {
+            console.log("Error fetching from:", pokemon_url[i], error);
+        }
+    }
+    
+    // console.log("Collected Results:", pokemon_data);
+}
+
+async function get_pokemon(id) {
+    return pokemon_data[id];
 }
 
 function filterPokemon(list_num){
@@ -553,6 +593,7 @@ function filterPokemon(list_num){
 async function main() {
     await get_all_pokemon();
     await get_types();
+    await load_pokemon();
 
    // get_pokemon(pokemon_id);   pokemon id not defined
 }
