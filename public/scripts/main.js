@@ -40,12 +40,17 @@ async function display_list(list_num) {
     
     list.innerHTML = html;
 
-    document.addEventListener('click', function handleClickOutside(event) {
+    setupClickOutside(list, list_num);
+}
+
+function setupClickOutside(list, list_num) {
+    function handleClickOutside(event) {
         if (!list.contains(event.target) && event.target.id !== `pokeSearch${list_num}`) {
             list.style.display = 'none';
             document.removeEventListener('click', handleClickOutside);
         }
-    });
+    }
+    document.addEventListener('click', handleClickOutside);
 }
 
 async function display_moves(index, pokemon) {
