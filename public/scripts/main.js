@@ -2,6 +2,9 @@ let pokemon_url = [];
 let pokemon_arr = [];
 let pokemon_data = [];
 
+let is_pokemon_loaded = false;
+let active_list = null;
+
 let poke_team = [];
 
 let type_moves=[];
@@ -17,21 +20,18 @@ for (let i = 0; i < 18; i++) {
     resists_type.push({ name: "", value: 0, img:"" });
 }
 
-function display_pokemon() {
-    for(let pokemon of pokemon_url)
-        console.log(pokemon);
-}
-
 async function display_list(list_num) {
+    active_list = list_num;
+
+    while(!is_pokemon_loaded)
+        await new Promise(resolve => setTimeout(resolve, 100));
+
     let list = document.querySelector(`#pokeList${list_num}`);
     let html = '';
     
     for (let i = 0; i < pokemon_arr.length; i++) {
         const pokemon = await get_pokemon(i); 
 
-        if (!pokemon.sprite)
-            console.warn(`Missing sprite for Pokémon: ${pokemon.name}`);
-        
         html += `
         <li>
             <a href="#" onclick="display_pokemon_info(${i}, ${list_num})" class="list_data">
@@ -42,6 +42,7 @@ async function display_list(list_num) {
     }
     
     list.innerHTML = html;
+    list.style.display = 'block';
 
     setupClickOutside(list, list_num);
 }
@@ -592,13 +593,16 @@ async function load_pokemon() {
                     type_name_2: type_name_2
                 });
             }
-
-
         } catch (error) {
             console.log("Error fetching from:", pokemon_url[i], error);
         }
     }
     
+    is_pokemon_loaded = true;
+
+    if(active_list !== null)
+        display_list(active_list);
+
     // console.log("Collected Results:", pokemon_data);
 }
 
@@ -630,8 +634,6 @@ async function main() {
     await get_all_pokemon();
     await get_types();
     await load_pokemon();
-
-   // get_pokemon(pokemon_id);   pokemon id not defined
 }
 
 main();
