@@ -125,10 +125,17 @@ input {
 }
 
 .type_image {
-    width: 60px; 
-    height: 40px; 
+    width:60px;
     object-fit: contain;
-    padding: 3px;
+    padding: 1px;
+    box-sizing: border-box;
+    flex-grow:0.12;
+}
+
+.poke_type_container{
+    display: flex;
+    height:30px;
+    gap:4px;
 }
 
 .type-against p {
@@ -168,6 +175,8 @@ input {
     font-size: 14px;
     border-radius: 5px;
     border: 1px solid black;
+    overflow:visible;
+    position:relative;
 }
 
 .image-move-row {
@@ -256,4 +265,96 @@ input[type="text"] {
     gap:5px;
     width:100%;
     overflow:auto;
+    flex-grow:0.12;
 }
+
+.normal-move{
+    color:white;
+    background-color:#999999;
+}
+
+.fighting-move{
+    color:white;
+    background-color:#f1a73c;
+}
+
+.flying-move{
+    color:white;
+    background-color:#aac2f0;
+}
+
+.poison-move{
+    color:white;
+    background-color:#7a589e;
+}
+
+.ground-move{
+    color:white;
+    background-color:#a37d3f;
+}
+
+.rock-move{
+    color:white;
+    background-color:#baba91;
+}
+
+.bug-move{
+    color:white;
+    background-color:#a2a63a;
+}
+
+.ghost-move{
+    color:white;
+    background-color:#69486e;
+}
+
+.steel-move{
+    color:white;
+    background-color:#7aaed1;
+}
+
+.fire-move{
+    background-color: #ff612c;
+    color:white;
+}
+
+.water-move{
+    color:white;
+    background-color:#578bc9;
+}
+
+.grass-move{
+    color:white;
+    background-color:#6bb742;
+}
+
+.electric-move{
+    color:white;
+    background-color:#f9dc4b;
+}
+
+.psychic-move{
+    color:white;
+    background-color:#ec7a7a;
+}
+
+.ice-move{
+    color:white;
+    background-color:#71b9e8;
+}
+
+.dragon-move{
+    color:white;
+    background-color:#5160aa;
+}
+
+.dark-move{
+    color:white;
+    background-color:#4e4841;
+}
+
+.fairy-move{
+    color:white;
+    background-color:#e0b8d6;
+}
+

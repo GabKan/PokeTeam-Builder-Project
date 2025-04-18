@@ -4,11 +4,14 @@ let pokemon_data = [];
 
 let poke_team = [];
 
+let type_moves=[];
 let type_weakness = [];
 let super_effective = [];
 let resists_type = [];
+let move_type_map = {};
 
 for (let i = 0; i < 18; i++) {
+    type_moves[i]=[];
     type_weakness.push({ name: "", value: 0, img:""});
     super_effective.push({ name: "", value: 0, img:"" });
     resists_type.push({ name: "", value: 0, img:"" });
@@ -53,21 +56,29 @@ function setupClickOutside(list, list_num) {
     document.addEventListener('click', handleClickOutside);
 }
 
-async function display_moves(index, pokemon) {
-    let moves = pokemon.moves;
 
+async function display_moves(index, pokemon) { //does it need to be async?
+    let moves = pokemon.moves;
+    
     let dropdowns = document.getElementsByClassName(`move_dropdown${index}`);
     for(let dropdown of dropdowns){
         let html = `<option value="">Select Move</option>`;
         for(let move of moves) {
-            html += `<option value="${move}">${move}</option>`;
+            let type=assign_type(move);
+            
+            html += `<option value="${move}" class="${type}-move">${move} </option>`;
         }
         dropdown.innerHTML = html;
+
+        dropdown.addEventListener('change', function() {
+            let selectedOption = this.options[this.selectedIndex];
+            this.className = `move_dropdown${index} ${selectedOption.className}`;
+        });
     }
 }
 
 async function display_pokemon_info(id, list_num){
-    let pokemon = await get_pokemon(id);
+    let pokemon = get_pokemon(id);
     poke_team[list_num-1] = pokemon;
    
     let img = document.querySelector(`#pk_img${list_num}`);
@@ -494,16 +505,28 @@ function calc_team(){
     display_team_relations();
 }
 
+function assign_type(move){
+   
+    return move_type_map[move];
+}
+
 async function get_types(){
     const t_response=await fetch("https://pokeapi.co/api/v2/type/");
     const t_data=await t_response.json();
 
+
     for(let i=0;i<18;i++){
-        const type_img_response=await fetch(t_data.results[i].url);
-        const type_img_data=await type_img_response.json();
+        const type_response=await fetch(t_data.results[i].url);
+        const type_data=await type_response.json();
 
-        const sprite=type_img_data.sprites["generation-vi"]["x-y"].name_icon;
+        const sprite=type_data.sprites["generation-viii"]["brilliant-diamond-and-shining-pearl"].name_icon;
 
+        for(let rec of type_data.moves){
+            if(!rec.name)
+                console.warn(`Move data undefined at type ${i};`, rec);
+            type_moves[i].push(rec.name);
+            move_type_map[rec.name] = t_data.results[i].name;
+        }
 
         type_weakness[i].name=t_data.results[i].name;
         type_weakness[i].img=sprite;
@@ -514,6 +537,13 @@ async function get_types(){
         resists_type[i].name=t_data.results[i].name;
         resists_type[i].img=sprite;
     }
+
+    for (let i = 0; i < 18; i++) {
+        for (let name of type_moves[i]) {
+           
+        }
+    }
+    
 }
 
 async function get_all_pokemon() {
@@ -539,8 +569,9 @@ async function load_pokemon() {
             let type_name_1 = pokemon.types[0].type.name;
 
             let moves = []
-            for (let move of pokemon.moves)
+            for (let move of pokemon.moves){
                 moves.push(move.move.name);
+            }
 
             if (type_length === 1) {
                 pokemon_data.push({
@@ -571,7 +602,7 @@ async function load_pokemon() {
     // console.log("Collected Results:", pokemon_data);
 }
 
-async function get_pokemon(id) {
+ function get_pokemon(id) {
     return pokemon_data[id];
 }
 
