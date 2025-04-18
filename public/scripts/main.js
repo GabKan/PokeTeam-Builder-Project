@@ -79,7 +79,7 @@ async function display_moves(index, pokemon) { //does it need to be async?
 
 async function display_pokemon_info(id, list_num){
     let pokemon = get_pokemon(id);
-    poke_team[list_num-1] = pokemon;
+    poke_team.push(pokemon);
    
     let img = document.querySelector(`#pk_img${list_num}`);
     img.innerHTML = `<img src=${pokemon.sprite} class="sprite"></img>`;
