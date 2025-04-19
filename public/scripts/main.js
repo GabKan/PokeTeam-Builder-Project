@@ -26,7 +26,8 @@ function generateTeamString() {
     for (let i = 0; i < poke_team.length; i++) {
         let pk = poke_team[i];
         let moves = pk.selected_moves ? pk.selected_moves.join(',') : "";
-        teamString += pk.id + ":" + pk.name + ":" + moves;
+        let nickname=pk.nickname ? pk.nickname: "";
+        teamString += pk.id + ":" + pk.name + ":" + moves + ":" + nickname;
 
         if (i !== poke_team.length - 1) {
             teamString += "|";
@@ -43,13 +44,15 @@ function loadTeamFromString(teamString) {
     for (let entry of teamArray) {
         let parts = entry.split(":");
         let id = parseInt(parts[0]);
+        let name = parts[1] ? parts[1] : "";
         let moves = parts[2] ? parts[2].split(",") : [];
-        let name = parts[3] ? parts[3] : "";
+        let nickname = parts[3] ? parts[3] : ""; 
 
         newTeam.push({
             id: id,
             name: name,
-            selected_moves: moves  // this is what you want
+            selected_moves: moves,
+            nickname: nickname 
         });
     }
 
@@ -57,6 +60,13 @@ function loadTeamFromString(teamString) {
 }
 
 function generateShareableURL() {
+    for (let i = 0; i < poke_team.length; i++) {
+        let nicknameInput = document.querySelector(`#pk${i+1} .nickname`);
+        if (nicknameInput) {
+            poke_team[i].nickname = nicknameInput.value.trim();  
+        }
+    }
+
     let teamString = generateTeamString(); 
     let encoded = encodeURIComponent(teamString); 
     let url = `${window.location.origin}${window.location.pathname}?team=${encoded}`;
@@ -82,6 +92,11 @@ async function loadTeamFromURL() {
 
             let name = document.querySelector(`#pokeSearch${i+1}`);
             name.value = pokemon.name;
+
+            let nicknameField = document.querySelector(`#pk${i+1} .nickname`);
+            if (nicknameField) {
+                nicknameField.value = loadedTeam[i].nickname ? loadedTeam[i].nickname : "";
+            }
 
             const list = document.querySelector(`#pokeList${i+1}`);
             list.innerHTML = "";
@@ -133,23 +148,13 @@ async function loadTeamFromURL() {
     }
 }
 
-function shareTeam(){
-    let url=generateShareableURL();
-    let input = document.getElementById("share-link");
-    input.value = url;
-    document.getElementById("share-box").style.display = "block";
-}
 
 function copyToClipboard() {
-    let input = document.getElementById("share-link");
-    
-    navigator.clipboard.writeText(input.value)
+    let url = generateShareableURL();
+
+    navigator.clipboard.writeText(url)
         .then(() => {
             alert("Link copied to clipboard!");
-
-            setTimeout(() => {
-                document.getElementById("share-box").style.display = "none";
-            }, 1000);
         })
         .catch(err => {
             console.error("Failed to copy: ", err);
@@ -218,7 +223,6 @@ function display_moves(index, pokemon) {
                 let movePosition = Array.from(dropdowns).indexOf(this);  
                 poke_team[index-1].selected_moves[movePosition] = selectedMove;
 
-                console.log("poke_team :", poke_team[index-1].selected_moves);
             }
         });
     }
