@@ -55,7 +55,8 @@ nav {
 }
 
 button {
-    background-color: #3B4CCA;
+    /*background-color: #3B4CCA;*/
+    background-color: green;
     color: white;
     border: none;
     padding: 10px;
@@ -64,7 +65,8 @@ button {
 }
 
 button:hover {
-    background-color: lightgreen;
+   /* background-color:rgb(109, 130, 193)*/
+   background-color: lightgreen;
 }
 
 label {
@@ -225,7 +227,7 @@ input[type="text"] {
     border-radius: 8px;
     max-height: 400px;        
     z-index:100;
-    width:60%;
+    width:68%;
     overflow-y: auto;
     list-style-type: none;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
