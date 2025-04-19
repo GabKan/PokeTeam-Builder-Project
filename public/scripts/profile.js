@@ -1,123 +1,180 @@
-savedTeams = [];
+
+let savedTeams = [];
+
 
 function saveTeam() {
-    team = [];
+    let team = [];
+    
 
-    for (i = 1; i <= 6; i++) {
-        pokemonNameElement = document.getElementById('pokeSearch' + i);
-        nicknameElement = document.querySelector('#pk' + i + ' .nickname');
-        pokiImg = document.getElementById('pk_img' + i);
-        imgElement = pokiImg.getElementsByTagName('img')[0];
-        
-        pokemonName = '';
-        if (pokemonNameElement) {
-            pokemonName = pokemonNameElement.value.trim();
-        }
-        
-        nickname = '';
-        if (nicknameElement) {
-            nickname = nicknameElement.value.trim();
-        }
-        
-        imgSrc = '';
-        if (imgElement) {
-            imgSrc = imgElement.src;
-        }
-
-        moveDropdowns = document.querySelectorAll('#pk' + i + ' .move_dropdown' + i);
-        moves = [];
-        for (j = 0; j < moveDropdowns.length; j++) {
-            if (moveDropdowns[j]) {
-                moves.push(moveDropdowns[j].value);
-            }
-        }
-
-        if (pokemonName) {
-            team.push({
-                name: pokemonName,
-                nickname: nickname,
-                img: imgSrc,
-                moves: moves
-            });
+    for (let i = 1; i <= 6; i++) {
+        let pokemonData = getPokemonData(i);
+        if (pokemonData.name) {
+            team.push(pokemonData);
         }
     }
 
-    storedTeams = localStorage.getItem("savedTeams");
-    if (storedTeams) {
-        savedTeams = JSON.parse(storedTeams);
-    } else {
-        savedTeams = [];
-    }
-    savedTeams.push(team);
-    localStorage.setItem("savedTeams", JSON.stringify(savedTeams));
+    saveToLocalStorage(team);
 
     alert("Team Saved!");
     window.location.href = "profile.html";
 }
 
-function loadSavedTeams() {
-    storedTeams = localStorage.getItem("savedTeams");
-    if (storedTeams) {
-        savedTeams = JSON.parse(storedTeams);
-    } else {
-        savedTeams = [];
-    }
-
-    for (index = 0; index < savedTeams.length && index < 6; index++) {
-        teamCard = document.getElementById('team' + (index + 1));
-        if (!teamCard) {
-            continue;
-        }
-
-        pokiImgs = teamCard.querySelectorAll(".poke-imagine");
-        team = savedTeams[index];
-
-        for (i = 0; i < team.length; i++) {
-            if (pokiImgs[i] && team[i]) {
-                pokiImgs[i].innerHTML = '<img src="' + team[i].img + '" class="sprite">';
-            }
-        }
-
-        deleteBtn = teamCard.querySelector(".delete-btn");
-        if (deleteBtn) {
-            deleteBtn.onclick = createDeleteHandler(index);
-        }
-
-        viewBtn = teamCard.querySelector(".view-team-btn");
-        if (viewBtn) {
-            viewBtn.onclick = createViewHandler(index);
+function getPokemonData(pokiInfo) {
+    let pokemonNameElement = document.getElementById('pokeSearch' + pokiInfo);
+    let nicknameElement = document.querySelector('#pk' + pokiInfo + ' .nickname');
+    let pokiImg = document.getElementById('pk_img' + pokiInfo);
+    let imgElement = null;
+    
+    if (pokiImg) {
+        let imgElements = pokiImg.getElementsByTagName('img');
+        if (imgElements.length > 0) {
+            imgElement = imgElements[0];
         }
     }
-}
+    
+ 
+    let pokemonName = '';
+    if (pokemonNameElement && pokemonNameElement.value) {
+        pokemonName = pokemonNameElement.value.trim();
+    }
+    
+    let nickname = '';
+    if (nicknameElement && nicknameElement.value) {
+        nickname = nicknameElement.value.trim();
+    }
+    
+    let imgSrc = '';
+    if (imgElement && imgElement.src) {
+        imgSrc = imgElement.src;
+    }
+    
+    let moves = getMoves(pokiInfo);
 
-function createDeleteHandler(index) {
-    return function handleDelete() {
-        deleteTeam(index);
+    return {
+        name: pokemonName,
+        nickname: nickname,
+        img: imgSrc,
+        moves: moves
     };
 }
 
-function createViewHandler(index) {
-    return function handleView() {
-        localStorage.setItem("currentTeamIndex", index);
-        window.location.href = "index.html";
-    };
+function getMoves(pokiInfo) {
+    let moves = [];
+    let moveDropdowns = document.querySelectorAll('#pk' + pokiInfo + ' .move_dropdown' + pokiInfo);
+    
+    for (let j = 0; j < moveDropdowns.length; j++) {
+        if (moveDropdowns[j] && moveDropdowns[j].value) {
+            moves.push(moveDropdowns[j].value);
+        }
+    }
+    
+    return moves;
 }
 
-function deleteTeam(index) {
-    storedTeams = localStorage.getItem("savedTeams");
+
+function saveToLocalStorage(team) {
+    let storedTeams = localStorage.getItem("savedTeams");
     if (storedTeams) {
         savedTeams = JSON.parse(storedTeams);
     } else {
         savedTeams = [];
     }
     
-    savedTeams.splice(index, 1);
+    savedTeams.push(team);
     localStorage.setItem("savedTeams", JSON.stringify(savedTeams));
-    location.reload();
 }
+
+
+function loadSavedTeams() {
+    let storedTeams = localStorage.getItem("savedTeams");
+    if (storedTeams) {
+        savedTeams = JSON.parse(storedTeams);
+    } else {
+        savedTeams = [];
+    }
+
+    let index = 0;
+    while (index < savedTeams.length && index < 6) {
+        displayTeam(index);
+        index++;
+    }
+}
+
+
+function displayTeam(index) {
+    let teamCard = document.getElementById('team' + (index + 1));
+    if (!teamCard) {
+        return;
+    }
+
+    let pokiImgs = teamCard.querySelectorAll(".poke-imagine");
+    let team = savedTeams[index];
+
+
+    let i = 0;
+    while (i < team.length) {
+        if (pokiImgs[i] && team[i] && team[i].img) {
+            pokiImgs[i].innerHTML = '<img src="' + team[i].img + '" class="sprite">';
+        }
+        i++;
+    }
+
+    setupTeamButtons(teamCard, index);
+}
+
+function setupTeamButtons(teamCard, index) {
+    let deleteBtn = teamCard.querySelector(".delete-btn");
+    if (deleteBtn) {
+        deleteBtn.onclick = DeleteHandler(index);
+    }
+
+    let viewBtn = teamCard.querySelector(".view-team-btn");
+    if (viewBtn) {
+        viewBtn.onclick = ViewHandler(index);
+    }
+}
+
+function DeleteHandler(index) {
+    return function deleteTeamHandler() {
+        deleteTeam(index);
+    };
+}
+
+function ViewHandler(index) {
+    return function viewTeamHandler() {
+        viewTeam(index);
+    };
+}
+
+function deleteTeam(index) {
+    let storedTeams = localStorage.getItem("savedTeams");
+    if (storedTeams) {
+        savedTeams = JSON.parse(storedTeams);
+    } else {
+        savedTeams = [];
+    }
+    
+    if (index >= 0 && index < savedTeams.length) {
+        savedTeams.splice(index, 1);
+        localStorage.setItem("savedTeams", JSON.stringify(savedTeams));
+        location.reload();
+    }
+}
+
+
+function viewTeam(index) {
+    localStorage.setItem("currentTeamIndex", index.toString());
+    window.location.href = "index.html";
+}
+
 
 function initializeTeamLoader() {
     loadSavedTeams();
 }
 
-document.addEventListener("DOMContentLoaded", initializeTeamLoader);
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeTeamLoader);
+} else {
+    initializeTeamLoader();
+}

@@ -17,6 +17,20 @@ nav {
     padding: 10px;
     font-size: 30px;
     margin-bottom: 50px;
+    display: flex; 
+    position: relative;
+    justify-content: center; 
+    align-items: center; 
+}
+
+.nav-center {
+    width: 100%;
+    text-align: center;
+}
+
+.new-team-btn {
+    position: absolute;
+    right: 10px; 
 }
 
 h1 {

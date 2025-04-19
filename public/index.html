@@ -17,6 +17,7 @@
             <button onclick="saveTeam()">Save My Team</button>
             <button>Share</button>
             <button onclick="window.location.href='signup.html'">Sign Up</button>
+            <button onclick="window.location.href='profile.html'">View Saved Teams</button>
         </div>
     </div>
     <main>
@@ -276,5 +277,48 @@
 </body>
 <script src="scripts/main.js"></script>
 <script src="scripts/profile.js"></script>
+
+<script>
+    function loadTeamFromStorage() {
+    let teamIndex = localStorage.getItem("currentTeamIndex");
+    if (teamIndex === null) return;
+
+    let storedTeams = localStorage.getItem("savedTeams");
+    if (!storedTeams) return;
+
+    let teams = JSON.parse(storedTeams);
+    let team = teams[teamIndex];
+    if (!team) return;
+
+    for (let i = 0; i < team.length; i++) {
+        let pokemon = team[i];
+        let pokiInfo = i + 1;
+
+
+        let nameInput = document.getElementById('pokeSearch' + pokiInfo);
+        if (nameInput) nameInput.value = pokemon.name;
+
+        let nicknameInput = document.querySelector('#pk' + pokiInfo + ' .nickname');
+        if (nicknameInput) nicknameInput.value = pokemon.nickname;
+
+        let imgContainer = document.getElementById('pk_img' + pokiInfo);
+        if (imgContainer) {
+            imgContainer.innerHTML = `<img src="${pokemon.img}" class="sprite">`;
+        }
+
+        let moveDropdowns = document.querySelectorAll('#pk' + pokiInfo + ' .move_dropdown' + pokiInfo);
+        for (let j = 0; j < moveDropdowns.length && j < pokemon.moves.length; j++) {
+            if (moveDropdowns[j]) {
+                moveDropdowns[j].value = pokemon.moves[j];
+            }
+        }
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    loadTeamFromStorage();
+});
+
+</script>
 
 </html>
