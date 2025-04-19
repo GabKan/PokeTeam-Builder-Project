@@ -20,6 +20,147 @@ for (let i = 0; i < 18; i++) {
     resists_type.push({ name: "", value: 0, img:"" });
 }
 
+function generateTeamString() {
+    let teamString = "";
+
+    for (let i = 0; i < poke_team.length; i++) {
+        let pk = poke_team[i];
+        let moves = pk.selected_moves ? pk.selected_moves.join(',') : "";
+        teamString += pk.id + ":" + pk.name + ":" + moves;
+
+        if (i !== poke_team.length - 1) {
+            teamString += "|";
+        }
+    }
+
+    return teamString;
+}
+
+function loadTeamFromString(teamString) {
+    let teamArray = teamString.split("|");
+    let newTeam = [];
+
+    for (let entry of teamArray) {
+        let parts = entry.split(":");
+        let idAndName = parts[0].split("-");  // Expecting: id-name
+        let id = parseInt(idAndName[0]);
+        let name = idAndName[1];
+        let selectedMoves = parts[1] ? parts[1].split(",") : [];  // This is now `selected_moves`
+
+        newTeam.push({
+            id: id,
+            name: name,
+            moves: selectedMoves,  // Now stores the selected moves
+            selected_moves: selectedMoves  // Initialize with selected moves
+        });
+    }
+
+    return newTeam;
+}
+
+function generateShareableURL() {
+    let teamString = generateTeamString(); 
+    let encoded = encodeURIComponent(teamString); 
+    let url = `${window.location.origin}${window.location.pathname}?team=${encoded}`;
+    return url;
+}
+
+async function loadTeamFromURL() {
+    let params = new URLSearchParams(window.location.search);
+    let teamParam = params.get("team");
+    if (teamParam) {
+        console.log("Team param found:", teamParam);
+        let decoded = decodeURIComponent(teamParam);
+        console.log("Decoded team data:", decoded);
+
+        // Check if there's any issue with loadTeamFromString
+        let loadedTeam = loadTeamFromString(decoded);
+        console.log("Loaded team object:", loadedTeam);
+
+        for (let i = 0; i < loadedTeam.length; i++) {
+            let pokemon = get_pokemon(loadedTeam[i].id)
+            poke_team[i] = pokemon; 
+            
+
+            let img = document.querySelector(`#pk_img${i+1}`);
+            img.innerHTML = `<img src=${pokemon.sprite} class="sprite"></img>`;
+
+            let name = document.querySelector(`#pokeSearch${i+1}`);
+            name.value = pokemon.name;
+
+            const list = document.querySelector(`#pokeList${i+1}`);
+            list.innerHTML = "";
+
+            let type = document.querySelector(`#poke_type${i+1}`);
+            let type1 = "";
+            for (let rec of type_weakness) {
+                if (rec.name === pokemon.type_name_1)
+                    type1 = rec.img;
+            }
+            type.innerHTML = `<img src="${type1}" alt="p${i+1}_type1" class="type_image">`;
+
+            if (pokemon.type_length === 2) {
+                let type2 = "";
+                for (let rec of type_weakness) {
+                    if (rec.name === pokemon.type_name_2)
+                        type2 = rec.img;
+                }   
+                type.innerHTML += `<img src="${type2}" alt="p${i+1}_type2" class="type_image">`; 
+            }    
+
+            display_moves(i+1, pokemon);  // correct index
+
+            if (pokemon.selected_moves && pokemon.selected_moves.length > 0) {
+                let dropdowns = document.getElementsByClassName(`move_dropdown${i+1}`);
+                for (let m = 0; m < dropdowns.length; m++) {
+                    let dropdown = dropdowns[m];
+                    let moveName = pokemon.selected_moves[m];
+
+                    let found = false;
+                    if (moveName) {
+                        for (let j = 0; j < dropdown.options.length; j++) {
+                            if (dropdown.options[j].value === moveName) {
+                                dropdown.selectedIndex = j;
+                                dropdown.className = `move_dropdown${i+1} ${dropdown.options[j].className}`;
+                                found = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (!found) {
+                        dropdown.selectedIndex = 0;
+                        dropdown.className = `move_dropdown${i+1}`;
+                    }
+                }
+            }
+        }
+        console.log("Loaded team from URL:", poke_team);
+    }
+}
+
+function shareTeam(){
+    let url=generateShareableURL();
+    let input = document.getElementById("share-link");
+    input.value = url;
+    document.getElementById("share-box").style.display = "block";
+}
+
+function copyToClipboard() {
+    let input = document.getElementById("share-link");
+    
+    navigator.clipboard.writeText(input.value)
+        .then(() => {
+            alert("Link copied to clipboard!");
+
+            setTimeout(() => {
+                document.getElementById("share-box").style.display = "none";
+            }, 1000);
+        })
+        .catch(err => {
+            console.error("Failed to copy: ", err);
+        });
+}
+
 async function display_list(list_num) {
     active_list = list_num;
 
@@ -58,7 +199,7 @@ function setupClickOutside(list, list_num) {
 }
 
 
-async function display_moves(index, pokemon) { //does it need to be async?
+function display_moves(index, pokemon) { 
     let moves = pokemon.moves;
     
     let dropdowns = document.getElementsByClassName(`move_dropdown${index}`);
@@ -74,6 +215,16 @@ async function display_moves(index, pokemon) { //does it need to be async?
         dropdown.addEventListener('change', function() {
             let selectedOption = this.options[this.selectedIndex];
             this.className = `move_dropdown${index} ${selectedOption.className}`;
+
+            let selectedMove = this.value;
+            if (poke_team[index-1]) {
+                poke_team[index-1].selected_moves = poke_team[index-1].selected_moves || [];
+
+                let movePosition = Array.from(dropdowns).indexOf(this);  
+                poke_team[index-1].selected_moves[movePosition] = selectedMove;
+
+                console.log("poke_team :", poke_team[index-1].selected_moves);
+            }
         });
     }
 }
@@ -109,7 +260,34 @@ async function display_pokemon_info(id, list_num){
         type.innerHTML+=`<img src="${type2}" alt="p${list_num}_type2" class="type_image">`; 
     }    
 
-    await display_moves(list_num, pokemon);
+    display_moves(list_num, pokemon);
+
+    if (pokemon.selected_moves && pokemon.selected_moves.length > 0) {
+        let dropdowns = document.getElementsByClassName(`move_dropdown${list_num}`);
+        for (let i = 0; i < dropdowns.length; i++) {
+            let dropdown = dropdowns[i];
+            let moveName = pokemon.selected_moves[i];
+
+            if (moveName) {
+                for (let j = 0; j < dropdown.options.length; j++) {
+                    if (dropdown.options[j].value === moveName) {
+                        dropdown.selectedIndex = j;
+                        dropdown.className = `move_dropdown${list_num} ${dropdown.options[j].className}`;
+                        break;
+                    }
+                }
+            
+            if (!found) {
+                dropdown.selectedIndex = 0;  
+                dropdown.className = `move_dropdown${list_num}`;
+            }
+            }
+             else {
+                dropdown.selectedIndex = 0;  
+                dropdown.className = `move_dropdown${list_num}`;
+            }
+        }
+    }
 }
 
 function display_team_relations(){
@@ -576,18 +754,24 @@ async function load_pokemon() {
 
             if (type_length === 1) {
                 pokemon_data.push({
+                    id:i,
                     sprite: sprite,
                     name: name,
+                    nickname:"",
                     moves: moves,
+                    selected_moves:[], 
                     type_length: type_length,
                     type_name_1: type_name_1
                 });
             } else if (type_length === 2) {
                 let type_name_2 = pokemon.types[1].type.name;
                 pokemon_data.push({
+                    id:i,
                     sprite: sprite,
                     name: name,
+                    nickname:"",
                     moves: moves,
+                    selected_moves:[],
                     type_length: type_length,
                     type_name_1: type_name_1,
                     type_name_2: type_name_2
@@ -634,6 +818,7 @@ async function main() {
     await get_all_pokemon();
     await get_types();
     await load_pokemon();
+    await loadTeamFromURL();
 }
 
 main();
