@@ -55,6 +55,7 @@ async function saveTeam() {
 
         await addDoc(userTeamsCollection, { team });
         alert("Team saved successfully!");
+        window.location.href = "profile.html";
     } catch (error) {
         console.error("Error saving team:", error.code, error.message);
     }
@@ -159,13 +160,18 @@ function viewTeam(index) {
 }
 
 
-function initializeTeamLoader() {
-    loadSavedTeams();
+async function initializeTeamLoader() {
+    savedTeams = await loadSavedTeams();
+    if (savedTeams) {
+        for (let i = 0; i < savedTeams.length; i++) {
+            displayTeam(i);
+        }
+    }
 }
 
 
-// if (document.readyState === 'loading') {
-//     document.addEventListener('DOMContentLoaded', initializeTeamLoader);
-// } else {
-//     initializeTeamLoader();
-// }
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeTeamLoader);
+} else {
+    initializeTeamLoader();
+}
