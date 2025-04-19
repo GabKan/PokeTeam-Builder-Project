@@ -7,13 +7,16 @@
     <title>Sign</title>
     <link href="https://fonts.cdnfonts.com/css/pokemon-solid" rel="stylesheet">
     <link rel="stylesheet" href="styles/signup.css">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Handjet:wght@100..900&family=Press+Start+2P&display=swap" rel="stylesheet">
 </head>
 
 <body>
     <nav class="red">
         <div class="nav-bar">
-            <a href="index.html" class="brand-logo"> Welcome to Pokemon Team Builder <span id="user"></span></a>
-            <h1 class="pokemon-font">PokéTeam Builder</h1>
+            <a href="index.html" class="brand-logo"><h1>Pokemon Team Builder</h1><span id="user"></span></a>
             <ul class="right">
                 <li>
                     <button class="btn waves-effect waves-light" id="logoutBtn" style="display: none">
@@ -26,21 +29,22 @@
         </div>
     </nav>
 
-    <main class="container">
+    <main>
         <div class="row" id="signupForm">
-            <h1 class="center-align">Sign Up</h1>
+            <h1 class="center-align" style="font-size: 20px;">Sign Up</h1>
+            <p class="info-paragraph">Signing up and logging in allows you to unlock the full potential of the Pokémon Team Builder. By creating an account, you can save your custom Pokémon teams, access them from any device, and share them with friends. Logging in ensures your progress is securely stored and personalized to your preferences. Whether you're building competitive teams or just having fun, signing up provides a seamless and enhanced experience tailored just for you!</p>
 
             <div class="signup">
                 <div class="input-field">
-                    <input name="email" id="signupEmail" type="email" required>
                     <label for="signupEmail">Email</label>
+                    <input name="email" id="signupEmail" type="email" required>
                 </div>
             </div>
 
             <div class="signup">
                 <div class="input-field">
-                    <input name="password" id="password" type="password" class="password" required>
                     <label for="signupPassword">Password</label>
+                    <input name="password" id="password" type="password" class="password" required>
                 </div>
             </div>
 
@@ -52,19 +56,20 @@
         </div>
 
         <div class="row hidden" id="loginForm">
-            <h1 class="center-align">Login</h1>
+            <h1 class="center-align" style="font-size: 20px;">Login</h1>
+            <p class="info-paragraph">Signing up and logging in allows you to unlock the full potential of the Pokémon Team Builder. By creating an account, you can save your custom Pokémon teams, access them from any device, and share them with friends. Logging in ensures your progress is securely stored and personalized to your preferences. Whether you're building competitive teams or just having fun, signing up provides a seamless and enhanced experience tailored just for you!</p>
 
             <div class="signup">
                 <div class="input-field">
-                    <input name="email" id="loginEmail" type="email" required>
                     <label for="loginEmail">Email</label>
+                    <input name="email" id="loginEmail" type="email" required>
                 </div>
             </div>
 
             <div class="signup">
                 <div class="input-field">
-                    <input name="password" id="loginPassword" type="password" required>
                     <label for="loginPassword">Password</label>
+                    <input name="password" id="loginPassword" type="password" required>
                 </div>
             </div>
 
@@ -73,6 +78,11 @@
                     Login
                 </button>
             </div>
+        </div>
+
+        <div id="login-img">
+            <img src="https://cdn.drop.media/guest/f9f47ed8-26d5-49d5-afe3-7f41e645b4e3.png" alt="pokemon-image">
+            <img src="https://cdn.drop.media/guest/aabab885-c3d0-460e-ab38-6274c933ce44.png" alt="pokeball-image">
         </div>
     </main>
     <script src="scripts/signup.js" type="module"></script>

@@ -55,12 +55,14 @@ nav {
 }
 
 button {
-    background-color: #3B4CCA;
+    /*background-color: #3B4CCA;*/
+    background-color: green;
     color: white;
     border: none;
     padding: 10px;
     border-radius: 10px;
     cursor: pointer;
+    box-shadow: 0 4px 6px black;
 }
 
 button:hover {
@@ -95,9 +97,9 @@ input {
     flex: 1;
     background-color: white;
     border-radius: 12px;
-    padding: 20px;
+    padding: 10px 20px 10px 20px;
     min-width: 200px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 4px 6px black;
     color: #E53E3E;
 }
 
@@ -153,7 +155,7 @@ input {
     background-color: white;
     padding: 10px 20px 10px 20px;
     border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 6px black;
     height: auto;
 }
 
@@ -183,6 +185,7 @@ input {
 select {
     padding: 5px;
     font-size: 8px;
+    border-radius: 5px;
 }
 
 option {
@@ -225,7 +228,7 @@ input[type="text"] {
     border-radius: 8px;
     max-height: 400px;        
     z-index:100;
-    width:60%;
+    width:68%;
     overflow-y: auto;
     list-style-type: none;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
