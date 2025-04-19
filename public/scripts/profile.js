@@ -1,105 +1,98 @@
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-app.js";
+import { getFirestore, collection, getDoc, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-firestore.js";
+import { auth } from "./auth.js";
+import firebaseConfig from "../firebaseConfig.js";
 
-let savedTeams = [];
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
+async function saveTeam() {
+    const user = auth.currentUser;
 
-function saveTeam() {
-    let team = [];
-    
+    if (!user) {
+        alert("You must be logged in to save your team.");
+        return;
+    }
+
+    const team = [];
 
     for (let i = 1; i <= 6; i++) {
-        let pokemonData = getPokemonData(i);
-        if (pokemonData.name) {
-            team.push(pokemonData);
+        const pokemonNameElement = document.getElementById('pokeSearch' + i);
+        const nicknameElement = document.querySelector('#pk' + i + ' .nickname');
+        const pokiImg = document.getElementById('pk_img' + i);
+        const imgElement = pokiImg.getElementsByTagName('img')[0];
+
+        const pokemonName = pokemonNameElement ? pokemonNameElement.value.trim() : '';
+        const nickname = nicknameElement ? nicknameElement.value.trim() : '';
+        const imgSrc = imgElement ? imgElement.src : '';
+
+        const moveDropdowns = document.querySelectorAll('#pk' + i + ' .move_dropdown' + i);
+        const moves = [];
+        for (let i = 0; i < moveDropdowns.length; i++) {
+            const dropdown = moveDropdowns[i];
+            moves.push(dropdown.value);
         }
+
+        if (pokemonName)
+            team.push({ name: pokemonName, nickname, img: imgSrc, moves });
     }
 
-    saveToLocalStorage(team);
+    if (team.length === 0) {
+        alert("Please add at least one Pokémon to your team before saving.");
+        return;
+    }
 
-    alert("Team Saved!");
-    window.location.href = "profile.html";
-}
+    console.log("Saving team:", team);
 
-function getPokemonData(pokiInfo) {
-    let pokemonNameElement = document.getElementById('pokeSearch' + pokiInfo);
-    let nicknameElement = document.querySelector('#pk' + pokiInfo + ' .nickname');
-    let pokiImg = document.getElementById('pk_img' + pokiInfo);
-    let imgElement = null;
-    
-    if (pokiImg) {
-        let imgElements = pokiImg.getElementsByTagName('img');
-        if (imgElements.length > 0) {
-            imgElement = imgElements[0];
+    try {
+        const userTeamsCollection = collection(db, "users", user.uid, "teams");
+        const querySnapshot = await getDocs(userTeamsCollection);
+
+        if(querySnapshot.size >= 6) {
+            alert("You can only save up to 6 teams.");
+            return;
         }
-    }
-    
- 
-    let pokemonName = '';
-    if (pokemonNameElement && pokemonNameElement.value) {
-        pokemonName = pokemonNameElement.value.trim();
-    }
-    
-    let nickname = '';
-    if (nicknameElement && nicknameElement.value) {
-        nickname = nicknameElement.value.trim();
-    }
-    
-    let imgSrc = '';
-    if (imgElement && imgElement.src) {
-        imgSrc = imgElement.src;
-    }
-    
-    let moves = getMoves(pokiInfo);
 
-    return {
-        name: pokemonName,
-        nickname: nickname,
-        img: imgSrc,
-        moves: moves
-    };
-}
-
-function getMoves(pokiInfo) {
-    let moves = [];
-    let moveDropdowns = document.querySelectorAll('#pk' + pokiInfo + ' .move_dropdown' + pokiInfo);
-    
-    for (let j = 0; j < moveDropdowns.length; j++) {
-        if (moveDropdowns[j] && moveDropdowns[j].value) {
-            moves.push(moveDropdowns[j].value);
-        }
-    }
-    
-    return moves;
-}
-
-
-function saveToLocalStorage(team) {
-    let storedTeams = localStorage.getItem("savedTeams");
-    if (storedTeams) {
-        savedTeams = JSON.parse(storedTeams);
-    } else {
-        savedTeams = [];
-    }
-    
-    savedTeams.push(team);
-    localStorage.setItem("savedTeams", JSON.stringify(savedTeams));
-}
-
-
-function loadSavedTeams() {
-    let storedTeams = localStorage.getItem("savedTeams");
-    if (storedTeams) {
-        savedTeams = JSON.parse(storedTeams);
-    } else {
-        savedTeams = [];
-    }
-
-    let index = 0;
-    while (index < savedTeams.length && index < 6) {
-        displayTeam(index);
-        index++;
+        await addDoc(userTeamsCollection, { team });
+        alert("Team saved successfully!");
+    } catch (error) {
+        console.error("Error saving team:", error.code, error.message);
     }
 }
 
+async function loadSavedTeams() {
+    const user = auth.currentUser;
+
+    if (!user) {
+        alert("You must be logged in to load your teams.");
+        return;
+    }
+
+    try {
+        const userTeamsCollection = collection(db, "users", user.uid, "teams");
+        const querySnapshot = await getDocs(userTeamsCollection);
+
+        const savedTeams = [];
+
+        querySnapshot.forEach((doc) => {
+            const teamData = doc.data().team;
+            if (teamData)
+                savedTeams.push(teamData);
+        });
+
+        console.log("Loaded teams:", savedTeams);
+        return savedTeams;
+    } catch (error) {
+        console.error("Error loading teams:", error);
+    }
+}
+
+window.saveTeam = saveTeam;
+window.loadSavedTeams = loadSavedTeams;
+
+button.addEventListener('click', loadSavedTeams);
+
+let savedTeams = [];
 
 function displayTeam(index) {
     let teamCard = document.getElementById('team' + (index + 1));
@@ -173,8 +166,8 @@ function initializeTeamLoader() {
 }
 
 
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initializeTeamLoader);
-} else {
-    initializeTeamLoader();
-}
+// if (document.readyState === 'loading') {
+//     document.addEventListener('DOMContentLoaded', initializeTeamLoader);
+// } else {
+//     initializeTeamLoader();
+// }
