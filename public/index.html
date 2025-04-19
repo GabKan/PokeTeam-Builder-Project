@@ -6,17 +6,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pokemon Team Builder</title>
     <link rel="stylesheet" href="styles/main.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Handjet:wght@100..900&family=Press+Start+2P&display=swap" rel="stylesheet">
 </head>
 
 <body>
-    <nav>Pokemon Team Builder</nav>
-
     <div class="builider-section">
-        <h1>Enter Your Pokemon</h1>
+        <h1>Pokemon Team Builder</h1>
         <div>
-            <button onclick="saveTeam()">Save My Team</button>
-            <button onclick="shareTeam()">Share</button>
-             
+            <button class="invisible-button" style="display: none;" onclick="saveTeam()">Save My Team</button>
+            <button class="invisible-button" style="display: none;" onclick="shareTeam()">Share</button>
 
             <button onclick="window.location.href='signup.html'">Sign Up</button>
             <button onclick="window.location.href='profile.html'">View Saved Teams</button>
@@ -284,9 +285,27 @@
 
 </body>
 <script src="scripts/main.js"></script>
-<script src="scripts/profile.js"></script>
+<script src="scripts/profile.js" type="module"></script>
 
-<script>
+<script type="module">
+    import { auth } from "./scripts/auth.js";
+    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const saveButton = document.querySelector(".invisible-button[onclick='saveTeam()']");
+        const shareButton = document.querySelector(".invisible-button[onclick='shareTeam()']");
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                if (saveButton) saveButton.style.display = "inline-block";
+                if (shareButton) shareButton.style.display = "inline-block";
+            } else {
+                if (saveButton) saveButton.style.display = "none";
+                if (shareButton) shareButton.style.display = "none";
+            }
+        });
+    });
+
     function loadTeamFromStorage() {
     let teamIndex = localStorage.getItem("currentTeamIndex");
     if (teamIndex === null) return;

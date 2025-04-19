@@ -90,8 +90,6 @@ async function loadSavedTeams() {
 window.saveTeam = saveTeam;
 window.loadSavedTeams = loadSavedTeams;
 
-button.addEventListener('click', loadSavedTeams);
-
 let savedTeams = [];
 
 function displayTeam(index) {

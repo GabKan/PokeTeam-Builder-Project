@@ -1,7 +1,13 @@
+* {
+    font-family: "Press Start 2P", system-ui;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 12px;
+}
+
 body {
-    background-color: #4C423E;
+    background-color: #33353A;
     margin: 0;
-    padding: 20px;
     color: black;
 }
 
@@ -15,10 +21,9 @@ main {
     grid-template-columns: 440px 440px 440px;
     width: 95%;
     margin: 0 auto;
-    gap: 20px;
+    gap: 15px;
     justify-content: center;
-    margin-bottom: 40px;
-    margin-top: 40px;
+    margin-top: 20px;
 }
 
 nav {
@@ -33,10 +38,10 @@ nav {
 }
 
 .builider-section {
-    background-color: white;
-    border-radius: 10px;
-    padding: 15px;
-    margin-top: 20px;
+    background-color: #E53E3E;
+    border-bottom-left-radius: 45px;
+    padding: 10px 45px;
+    margin: 0px 0px 0px 30px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -45,18 +50,16 @@ nav {
 
 .builider-section h1 {
     margin: 0;
-    color: #E53E3E;
-    font-size: 28px;
+    color: white;
+    font-size: 20px;
 }
 
 button {
-    background-color: green;
+    background-color: #3B4CCA;
     color: white;
     border: none;
     padding: 10px;
-    border-radius: 5px;
-    font-size: 15px;
-    margin-left: 10px;
+    border-radius: 10px;
     cursor: pointer;
 }
 
@@ -66,7 +69,7 @@ button:hover {
 
 label {
     display: block;
-    margin-top: 10px;
+    margin-top: 5px;
     margin-bottom: 5px;
     font-weight: bold;
     color: black;
@@ -78,13 +81,13 @@ input {
     border: 1px solid white;
     border-radius: 5px;
     box-sizing: border-box;
-    font-size: 17px;
 }
 
 .type-container {
     display: flex;
     gap: 20px;
-    margin: 20px 0;
+    justify-content: space-around;
+    margin: 20px;
     flex-wrap: wrap;
 }
 
@@ -104,7 +107,7 @@ input {
 .type-category h5{
     margin-top: 0;
     color: #E53E3E;
-    font-size: 20px;
+    font-size: 15px;
     border-bottom: 1px solid black;
     padding-bottom: 5px;
 }
@@ -148,22 +151,21 @@ input {
     display: flex;
     flex-direction: column;
     background-color: white;
-    padding: 15px;
+    padding: 10px 20px 10px 20px;
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
     height: auto;
 }
 
 .poke_image {
-    height: 150px;
-    width: 200px;
+    height: 100%;
+    width: 150px;
     border: 1px solid black;
     border-radius: 8px;
     background-color:#fafafa;
 }
 
 .poke_info {
-    font-size: 15px;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -172,17 +174,27 @@ input {
 
 .move_dropdown {
     padding: 6px;
-    font-size: 14px;
     border-radius: 5px;
     border: 1px solid black;
     overflow:visible;
     position:relative;
 }
 
+select {
+    padding: 5px;
+    font-size: 8px;
+}
+
+option {
+    font-size: 8px;
+}
+
 .image-move-row {
     display: flex;
-    gap: 50px;
-    margin: 10px;
+    height: 150px;
+    justify-content: space-between;
+    /* gap: 50px; */
+    margin-top: 10px;
 }
 
 .moves-box {
@@ -191,20 +203,19 @@ input {
     padding: 10px;
     display: flex;
     flex-direction: column;
+    justify-content: space-around;
     gap: 12px;
-    width: 150px;
+    width: 200px;
+    height: 130px;
 }
 
 input[type="text"] {
     border: 1px solid black;
-    font-size: 15px;
 }
 
 .nickname {
     width: 100%;
-    font-size: 16px;
-    padding: 8px;
-    margin-bottom: 10px;
+    padding: 10px;
 }
 
 .list{
@@ -222,7 +233,6 @@ input[type="text"] {
 
 .list_data{
     text-decoration: none;
-    font-size:larger;
     color:rgb(18, 17, 17);
     display: flex;                      
     padding: 8px 12px;          
@@ -357,4 +367,3 @@ input[type="text"] {
     color:white;
     background-color:#e0b8d6;
 }
-
