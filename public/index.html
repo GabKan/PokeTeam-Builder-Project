@@ -16,18 +16,13 @@
     <div class="builider-section">
         <h1>Pokemon Team Builder</h1>
         <div>
-            <button id="save-button" style="display: none;" onclick="saveTeam()">Save My Team</button>
-            <button id="share-button" style="display: none;" onclick="shareTeam()">Share</button>
+            <button class="invisible-button" style="display: none;" onclick="saveTeam()">Save My Team</button>
+            <button id="share-button" onclick="copyToClipboard()">Share</button>
 
             <button id="signup-button" onclick="window.location.href='signup.html'">Sign Up</button>
             <button id="view-teams" onclick="window.location.href='profile.html'">View Saved Teams</button>
             <button id="logout-button" style="display: none;">Log Out</button>
         </div>
-    </div>
-               
-    <div id="share-box" style="display:none;">
-        <input type="text" id="share-link" readonly>
-        <button id="copy_button" onclick="copyToClipboard()">Copy Link</button>
     </div>
     
     <div id="loading-screen">
