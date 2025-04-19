@@ -37,21 +37,19 @@ function generateTeamString() {
 }
 
 function loadTeamFromString(teamString) {
-    let teamArray = teamString.split("|");
+    let teamArray = teamString.split("|"); 
     let newTeam = [];
 
     for (let entry of teamArray) {
         let parts = entry.split(":");
-        let idAndName = parts[0].split("-");  // Expecting: id-name
-        let id = parseInt(idAndName[0]);
-        let name = idAndName[1];
-        let selectedMoves = parts[1] ? parts[1].split(",") : [];  // This is now `selected_moves`
+        let id = parseInt(parts[0]);
+        let moves = parts[2] ? parts[2].split(",") : [];
+        let name = parts[3] ? parts[3] : "";
 
         newTeam.push({
             id: id,
             name: name,
-            moves: selectedMoves,  // Now stores the selected moves
-            selected_moves: selectedMoves  // Initialize with selected moves
+            selected_moves: moves  // this is what you want
         });
     }
 
@@ -69,16 +67,13 @@ async function loadTeamFromURL() {
     let params = new URLSearchParams(window.location.search);
     let teamParam = params.get("team");
     if (teamParam) {
-        console.log("Team param found:", teamParam);
         let decoded = decodeURIComponent(teamParam);
-        console.log("Decoded team data:", decoded);
 
-        // Check if there's any issue with loadTeamFromString
         let loadedTeam = loadTeamFromString(decoded);
-        console.log("Loaded team object:", loadedTeam);
 
         for (let i = 0; i < loadedTeam.length; i++) {
             let pokemon = get_pokemon(loadedTeam[i].id)
+            pokemon.selected_moves=loadedTeam[i].selected_moves;
             poke_team[i] = pokemon; 
             
 
@@ -108,7 +103,7 @@ async function loadTeamFromURL() {
                 type.innerHTML += `<img src="${type2}" alt="p${i+1}_type2" class="type_image">`; 
             }    
 
-            display_moves(i+1, pokemon);  // correct index
+            display_moves(i+1, pokemon);  
 
             if (pokemon.selected_moves && pokemon.selected_moves.length > 0) {
                 let dropdowns = document.getElementsByClassName(`move_dropdown${i+1}`);
@@ -815,10 +810,14 @@ function filterPokemon(list_num){
 }
 
 async function main() {
+    document.getElementById("loading-screen").style.display = "flex";  // Show loading
+
     await get_all_pokemon();
     await get_types();
     await load_pokemon();
     await loadTeamFromURL();
+
+    document.getElementById("loading-screen").style.display = "none";  // Hide loading
 }
 
 main();

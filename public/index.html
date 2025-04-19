@@ -25,9 +25,16 @@
                
     <div id="share-box" style="display:none;">
         <input type="text" id="share-link" readonly>
-        <button onclick="copyToClipboard()">Copy Link</button>
+        <button id="copy_button" onclick="copyToClipboard()">Copy Link</button>
     </div>
     
+    <div id="loading-screen">
+            
+        <div class="spinner"></div>
+            <p style="margin-top: 10px; font-size: 1.2rem;">Loading...</p>
+        </div>
+    </div>
+
     <main>
         <section id="pk1" class="card">
             <div class="poke_info">
