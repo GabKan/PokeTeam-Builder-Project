@@ -16,11 +16,12 @@
     <div class="builider-section">
         <h1>Pokemon Team Builder</h1>
         <div>
-            <button class="invisible-button" style="display: none;" onclick="saveTeam()">Save My Team</button>
-            <button class="invisible-button" style="display: none;" onclick="shareTeam()">Share</button>
+            <button id="save-button" style="display: none;" onclick="saveTeam()">Save My Team</button>
+            <button id="share-button" style="display: none;" onclick="shareTeam()">Share</button>
 
-            <button onclick="window.location.href='signup.html'">Sign Up</button>
-            <button onclick="window.location.href='profile.html'">View Saved Teams</button>
+            <button id="signup-button" onclick="window.location.href='signup.html'">Sign Up</button>
+            <button id="view-teams" onclick="window.location.href='profile.html'">View Saved Teams</button>
+            <button id="logout-button" style="display: none;">Log Out</button>
         </div>
     </div>
                
@@ -295,20 +296,38 @@
 <script src="scripts/profile.js" type="module"></script>
 
 <script type="module">
-    import { auth } from "./scripts/auth.js";
+    import { auth, logout } from "./scripts/auth.js";
     import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
 
     document.addEventListener("DOMContentLoaded", () => {
-        const saveButton = document.querySelector(".invisible-button[onclick='saveTeam()']");
-        const shareButton = document.querySelector(".invisible-button[onclick='shareTeam()']");
+        const saveButton = document.getElementById("save-button");
+        const shareButton = document.getElementById("share-button");
+        const signupButton = document.getElementById("signup-button");
+        const logoutButton = document.getElementById("logout-button");
+        const viewTeamsButton = document.getElementById("view-teams");
+
+        logoutButton.onclick = async () => {
+            try {
+                await logout();
+                alert("You have been logged out.");
+            } catch (error) {
+                console.error("Error logging out:", error.message);
+            }
+        };
 
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 if (saveButton) saveButton.style.display = "inline-block";
                 if (shareButton) shareButton.style.display = "inline-block";
+                if (signupButton) signupButton.style.display = "none";
+                if (logoutButton) logoutButton.style.display = "inline-block";
+                if (viewTeamsButton) viewTeamsButton.style.display = "inline-block";
             } else {
                 if (saveButton) saveButton.style.display = "none";
                 if (shareButton) shareButton.style.display = "none";
+                if (signupButton) signupButton.style.display = "inline-block";
+                if (logoutButton) logoutButton.style.display = "none";
+                if (viewTeamsButton) viewTeamsButton.style.display = "none";
             }
         });
     });
