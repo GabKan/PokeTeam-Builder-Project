@@ -731,62 +731,62 @@ async function get_all_pokemon() {
 
     for(let result of data.results) {
         pokemon_url.push(result.url);
-        pokemon_arr.push(result);
+    pokemon_arr.push(result);
     }
 }
 
 async function load_pokemon() {
-    for (let i = 0; i < pokemon_url.length; i++) {
-        try {
-            let response = await fetch(pokemon_url[i]);
-            let pokemon = await response.json();
+    try {
+        const responses = await Promise.all(pokemon_url.map(url => fetch(url)));
+        const pokemonData = await Promise.all(responses.map(res => res.json()));
 
-            let sprite = pokemon.sprites.front_default;
-            let name = pokemon.name;
-            let type_length = pokemon.types.length;
-            let type_name_1 = pokemon.types[0].type.name;
+        for (let i = 0; i < pokemonData.length; i++) {
+            const pokemon = pokemonData[i];
+            const sprite = pokemon.sprites.front_default;
+            const name = pokemon.name;
+            const type_length = pokemon.types.length;
+            const type_name_1 = pokemon.types[0].type.name;
 
-            let moves = []
-            for (let move of pokemon.moves){
-                moves.push(move.move.name);
+            const moves = [];
+            for (let j = 0; j < pokemon.moves.length; j++) {
+                moves.push(pokemon.moves[j].move.name);
             }
 
             if (type_length === 1) {
                 pokemon_data.push({
-                    id:i,
+                    id: i,
                     sprite: sprite,
                     name: name,
-                    nickname:"",
+                    nickname: "",
                     moves: moves,
-                    selected_moves:[], 
-                    type_length: type_length,
-                    type_name_1: type_name_1
-                });
-            } else if (type_length === 2) {
-                let type_name_2 = pokemon.types[1].type.name;
-                pokemon_data.push({
-                    id:i,
-                    sprite: sprite,
-                    name: name,
-                    nickname:"",
-                    moves: moves,
-                    selected_moves:[],
+                    selected_moves: [],
                     type_length: type_length,
                     type_name_1: type_name_1,
-                    type_name_2: type_name_2
+                });
+            } else if (type_length === 2) {
+                const type_name_2 = pokemon.types[1].type.name;
+                pokemon_data.push({
+                    id: i,
+                    sprite: sprite,
+                    name: name,
+                    nickname: "",
+                    moves: moves,
+                    selected_moves: [],
+                    type_length: type_length,
+                    type_name_1: type_name_1,
+                    type_name_2: type_name_2,
                 });
             }
-        } catch (error) {
-            console.log("Error fetching from:", pokemon_url[i], error);
         }
+
+        is_pokemon_loaded = true;
+
+        if (active_list !== null)
+            display_list(active_list);
+
+    } catch (error) {
+        console.error("Error loading Pokémon:", error);
     }
-    
-    is_pokemon_loaded = true;
-
-    if(active_list !== null)
-        display_list(active_list);
-
-    // console.log("Collected Results:", pokemon_data);
 }
 
  function get_pokemon(id) {
