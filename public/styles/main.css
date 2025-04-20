@@ -8,12 +8,6 @@
 body {
     background-color: #33353A;
     margin: 0;
-    color: black;
-}
-
-h1 {
-    padding: 0;
-    margin: 0;
 }
 
 main {
@@ -21,20 +15,10 @@ main {
     grid-template-columns: 440px 440px 440px;
     width: 95%;
     margin: 0 auto;
-    gap: 15px;
+    gap: 18px;
     justify-content: center;
-    margin-top: 20px;
-}
-
-nav {
-    background-color:#E53E3E;
-    color: white;
-    padding: 15px;
-    text-align: center;
-    font-size: 30px;
-    font-weight: bold;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    margin-top: 30px;
+    padding-bottom: 20px;
 }
 
 .builider-section {
@@ -55,7 +39,6 @@ nav {
 }
 
 button {
-    /*background-color: #3B4CCA;*/
     background-color: green;
     color: white;
     border: none;
@@ -73,7 +56,6 @@ label {
     display: block;
     margin-top: 5px;
     margin-bottom: 5px;
-    font-weight: bold;
     color: black;
 }
 
@@ -107,7 +89,7 @@ input {
 .type-category h3,
 .type-category h4,
 .type-category h5{
-    margin-top: 0;
+    margin-top: 0px;
     color: #E53E3E;
     font-size: 15px;
     border-bottom: 1px solid black;
@@ -116,9 +98,10 @@ input {
 
 .type_line {
     display: flex;
-    flex-wrap: wrap; 
+    flex-wrap: wrap;
     padding: 5px;
     gap: 5px;
+    overflow: auto;
 }
 
 .type-against {
@@ -130,23 +113,21 @@ input {
 }
 
 .type_image {
-    width:60px;
+    width:75px;
     object-fit: contain;
     padding: 1px;
-    box-sizing: border-box;
-    flex-grow:0.12;
-}
-
-.poke_type_container{
-    display: flex;
-    height:30px;
-    gap:4px;
 }
 
 .type-against p {
     font-size: 15px;
     color: black;
     font-weight: bold;
+}
+
+.poke_type_container{
+    display: flex;
+    height:30px;
+    gap:4px;
 }
 
 .card {
@@ -196,7 +177,6 @@ option {
     display: flex;
     height: 150px;
     justify-content: space-between;
-    /* gap: 50px; */
     margin-top: 10px;
 }
 
@@ -271,15 +251,6 @@ input[type="text"] {
     height:100%;
     background-color:#E6E6E6;
     border-radius:8px;
-}
-
-.type_line{
-    display:inline-flex;
-    align-items:center;
-    gap:5px;
-    width:100%;
-    overflow:auto;
-    flex-grow:0.12;
 }
 
 .normal-move{
@@ -387,7 +358,7 @@ input[type="text"] {
     width: 50px;
     height: 50px;
     border: 6px solid #ccc;
-    border-top-color: #3b82f6; /* blue highlight */
+    border-top-color: #3b82f6; 
     border-radius: 50%;
     animation: spin 1s linear infinite;
 }
