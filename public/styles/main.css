@@ -228,9 +228,10 @@ input[type="text"] {
     border-radius: 8px;
     max-height: 400px;        
     z-index:100;
-    width:68%;
+    width:70%;
     overflow-y: auto;
     list-style-type: none;
+    padding-left:0;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
 }
 
@@ -241,7 +242,7 @@ input[type="text"] {
     padding: 8px 12px;          
     gap: 10px; 
     align-items: center;
-    margin-right: 50px;
+    margin-right: 0px;
 }
 
 .list:empty{
