@@ -2,9 +2,12 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.10.0/fireba
 import { getFirestore, collection, getDoc, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-firestore.js";
 import { auth } from "./auth.js";
 import firebaseConfig from "../firebaseConfig.js";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+
+let teams = [];
 
 async function saveTeam() {
     const user = auth.currentUser;
@@ -42,8 +45,6 @@ async function saveTeam() {
         return;
     }
 
-    console.log("Saving team:", team);
-
     try {
         const userTeamsCollection = collection(db, "users", user.uid, "teams");
         const querySnapshot = await getDocs(userTeamsCollection);
@@ -61,29 +62,35 @@ async function saveTeam() {
     }
 }
 
+function waitForUserAuth() {
+    return new Promise((resolve, reject) => {
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                resolve(user);
+            } else {
+                reject("User not logged in");
+            }
+        });
+    });
+}
+
 async function loadSavedTeams() {
-    const user = auth.currentUser;
-
-    if (!user) {
-        alert("You must be logged in to load your teams.");
-        return;
-    }
-
     try {
+        const user = await waitForUserAuth();
         const userTeamsCollection = collection(db, "users", user.uid, "teams");
         const querySnapshot = await getDocs(userTeamsCollection);
 
         const savedTeams = [];
-
         querySnapshot.forEach((doc) => {
             const teamData = doc.data().team;
-            if (teamData)
+            if (teamData) {
                 savedTeams.push(teamData);
+            }
         });
 
-        console.log("Loaded teams:", savedTeams);
         return savedTeams;
     } catch (error) {
+        alert("Error: " + error);
         console.error("Error loading teams:", error);
     }
 }
@@ -91,87 +98,84 @@ async function loadSavedTeams() {
 window.saveTeam = saveTeam;
 window.loadSavedTeams = loadSavedTeams;
 
-let savedTeams = [];
+async function displayTeam(index) {
+    teams = await loadSavedTeams();
 
-function displayTeam(index) {
-    let teamCard = document.getElementById('team' + (index + 1));
+    let teamCard = document.getElementById(`team${index + 1}`);
     if (!teamCard) {
+        console.error(`Team card with ID team${index} not found.`);
         return;
     }
 
     let pokiImgs = teamCard.querySelectorAll(".poke-imagine");
-    let team = savedTeams[index];
+    let team = teams[index];
 
-
-    let i = 0;
-    while (i < team.length) {
-        if (pokiImgs[i] && team[i] && team[i].img) {
+    for (let i = 0; i < team.length; i++)
+        if (pokiImgs[i] && team[i] && team[i].img)
             pokiImgs[i].innerHTML = '<img src="' + team[i].img + '" class="sprite">';
-        }
-        i++;
-    }
 
-    setupTeamButtons(teamCard, index);
+    // setupTeamButtons(teamCard, index);
 }
 
-function setupTeamButtons(teamCard, index) {
-    let deleteBtn = teamCard.querySelector(".delete-btn");
-    if (deleteBtn) {
-        deleteBtn.onclick = DeleteHandler(index);
-    }
+// function setupTeamButtons(teamCard, index) {
+//     let deleteBtn = teamCard.querySelector(".delete-btn");
+//     if (deleteBtn) {
+//         deleteBtn.onclick = DeleteHandler(index);
+//     }
 
-    let viewBtn = teamCard.querySelector(".view-team-btn");
-    if (viewBtn) {
-        viewBtn.onclick = ViewHandler(index);
-    }
-}
+//     let viewBtn = teamCard.querySelector(".view-team-btn");
+//     if (viewBtn) {
+//         viewBtn.onclick = ViewHandler(index);
+//     }
+// }
 
-function DeleteHandler(index) {
-    return function deleteTeamHandler() {
-        deleteTeam(index);
-    };
-}
+// function DeleteHandler(index) {
+//     return function deleteTeamHandler() {
+//         deleteTeam(index);
+//     };
+// }
 
-function ViewHandler(index) {
-    return function viewTeamHandler() {
-        viewTeam(index);
-    };
-}
+// function ViewHandler(index) {
+//     return function viewTeamHandler() {
+//         viewTeam(index);
+//     };
+// }
 
-function deleteTeam(index) {
-    let storedTeams = localStorage.getItem("savedTeams");
-    if (storedTeams) {
-        savedTeams = JSON.parse(storedTeams);
-    } else {
-        savedTeams = [];
-    }
+// function deleteTeam(index) {
+//     let storedTeams = localStorage.getItem("savedTeams");
+//     if (storedTeams) {
+//         savedTeams = JSON.parse(storedTeams);
+//     } else {
+//         savedTeams = [];
+//     }
     
-    if (index >= 0 && index < savedTeams.length) {
-        savedTeams.splice(index, 1);
-        localStorage.setItem("savedTeams", JSON.stringify(savedTeams));
-        location.reload();
-    }
-}
+//     if (index >= 0 && index < savedTeams.length) {
+//         savedTeams.splice(index, 1);
+//         localStorage.setItem("savedTeams", JSON.stringify(savedTeams));
+//         location.reload();
+//     }
+// }
 
 
-function viewTeam(index) {
-    localStorage.setItem("currentTeamIndex", index.toString());
-    window.location.href = "index.html";
-}
-
+// function viewTeam(index) {
+//     localStorage.setItem("currentTeamIndex", index.toString());
+//     window.location.href = "index.html";
+// }
 
 async function initializeTeamLoader() {
-    savedTeams = await loadSavedTeams();
-    if (savedTeams) {
-        for (let i = 0; i < savedTeams.length; i++) {
-            displayTeam(i);
-        }
+    try {
+        teams = await loadSavedTeams();
+        if (teams && teams.length > 0)
+            for (let i = 0; i < teams.length; i++)
+                displayTeam(i);
+        else
+            console.log("No saved teams found.");
+    } catch (error) {
+        console.error("Failed to initialize team loader:", error);
     }
 }
 
-
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initializeTeamLoader);
-} else {
-    initializeTeamLoader();
-}
+window.addEventListener("DOMContentLoaded", () => {
+    if (document.querySelector(".saved-teams"))
+        initializeTeamLoader();
+});
