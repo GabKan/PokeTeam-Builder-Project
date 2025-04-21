@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-app.js";
-import { getFirestore, collection, deleteDoc, doc, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-firestore.js";
+import { getFirestore, collection, deleteDoc, doc, addDoc, getDocs, updateDoc } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-firestore.js";
 import { auth } from "./auth.js";
 import firebaseConfig from "../firebaseConfig.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
@@ -69,6 +69,72 @@ async function saveTeam() {
         console.error("Error saving team:", error.code, error.message);
     }
 }
+
+async function updateTeam() {
+    const user = auth.currentUser;
+
+    if (!user) {
+        window.location.href = "./index.html";
+        return;
+    }
+
+    const teamId = sessionStorage.getItem('teamId');
+    if (!teamId) {
+        console.error("No team ID found in session storage.");
+        return;
+    }
+
+    const team = [];
+
+    for (let i = 1; i <= 6; i++) {
+        const pokemonNameElement = document.getElementById('pokeSearch' + i);
+        const nicknameElement = document.querySelector('#pk' + i + ' .nickname');
+        const pokiImg = document.getElementById('pk_img' + i);
+        const imgElement = pokiImg.getElementsByTagName('img')[0];
+
+        const pokemonName = pokemonNameElement ? pokemonNameElement.value.trim() : '';
+        const nickname = nicknameElement ? nicknameElement.value.trim() : '';
+        const imgSrc = imgElement ? imgElement.src : '';
+
+        const moveDropdowns = document.querySelectorAll('#pk' + i + ' .move_dropdown' + i);
+        const moves = [];
+
+        for (let i = 0; i < moveDropdowns.length; i++) {
+            const dropdown = moveDropdowns[i];
+            moves.push(dropdown.value);
+        }
+
+        if (pokemonName) {
+            const pokemon = pokemon_data.find(p => p.name.toLowerCase() === pokemonName.toLowerCase());
+            const pokeID = pokemon ? pokemon.id : null;
+
+            if (pokeID !== null) {
+                team.push({ id: pokeID, name: pokemonName, nickname, img: imgSrc, moves });
+            } else {
+                console.warn(`Pokemon with name "${pokemonName}" not found in pokemon_data.`);
+            }
+        }
+    }
+
+    if (team.length === 0) {
+        alert("Please add at least one Pokémon to your team before updating.");
+        return;
+    }
+
+    try {
+        const teamRef = doc(db, "users", user.uid, "teams", teamId);
+        await updateDoc(teamRef, { team });
+        alert("Team updated successfully!");
+        sessionStorage.removeItem('viewedFromProfile');
+        sessionStorage.removeItem('teamId');
+        window.location.href = "profile.html";
+    } catch (error) {
+        console.error("Error updating team:", error);
+        alert("Failed to update team. Please try again.");
+    }
+}
+
+window.updateTeam = updateTeam;
 
 function waitForUserAuth() {
     return new Promise((resolve, reject) => {
@@ -167,6 +233,13 @@ function setupTeamButtons(teamCard, index) {
             viewTeam(index);
         };
 }
+
+function startNewTeam() {
+    sessionStorage.removeItem('teamId');
+    sessionStorage.removeItem('viewedFromProfile');
+    window.location.href = 'index.html';
+}
+window.startNewTeam = startNewTeam;
 
 async function initializeTeamLoader() {
     try {
