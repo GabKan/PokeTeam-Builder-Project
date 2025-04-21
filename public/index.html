@@ -363,26 +363,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const pokemon = team[i];
                 const slot = i + 1;
 
-                const nameInput = document.getElementById(`pokeSearch${slot}`);
-                if (nameInput)
-                    nameInput.value = pokemon.name || '';
-
-                const nicknameInput = document.querySelector(`#pk${slot} .nickname`);
-                if (nicknameInput)
-                    nicknameInput.value = pokemon.nickname || '';
-
-                const imgContainer = document.getElementById(`pk_img${slot}`);
-                if (imgContainer && pokemon.img)
-                    imgContainer.innerHTML = `<img src="${pokemon.img}" class="sprite">`;
-
-                display_moves(slot, pokemon);
-
-                // const moveDropdowns = document.querySelectorAll(`#pk${slot} .move_dropdown${slot}`);
-                // moveDropdowns.forEach((dropdown, j) => {
-                //     if (pokemon.moves && j < pokemon.moves.length) {
-                //         dropdown.value = pokemon.moves[j] || '';
-                //     }
-                // });
+                await display_pokemon_info(pokemon.id, slot);
             }
         } catch (error) {
             console.error("Error loading team from Firestore:", error);

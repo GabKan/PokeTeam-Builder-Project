@@ -36,8 +36,16 @@ async function saveTeam() {
             moves.push(dropdown.value);
         }
 
-        if (pokemonName)
-            team.push({ name: pokemonName, nickname, img: imgSrc, moves });
+        if (pokemonName) {
+            const pokemon = pokemon_data.find(p => p.name.toLowerCase() === pokemonName.toLowerCase());
+            const pokeID = pokemon ? pokemon.id : null;
+
+            if (pokeID !== null) {
+                team.push({ id: pokeID, name: pokemonName, nickname, img: imgSrc, moves });
+            } else {
+                console.warn(`Pokemon with name "${pokemonName}" not found in pokemon_data.`);
+            }
+        }
     }
 
     if (team.length === 0) {
