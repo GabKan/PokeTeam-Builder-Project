@@ -13,7 +13,7 @@ async function saveTeam() {
     const user = auth.currentUser;
 
     if (!user) {
-        alert("You must be logged in to save your team.");
+        window.location.href = "./index.html";
         return;
     }
 
@@ -150,6 +150,7 @@ async function viewTeam(index) {
 
     const teamID = teams[index].id;
     sessionStorage.setItem('teamId', teamID);
+    sessionStorage.setItem('viewedFromProfile', 'true');
     window.location.href = `index.html`;
 }
 
