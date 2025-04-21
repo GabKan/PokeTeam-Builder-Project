@@ -366,10 +366,38 @@ document.addEventListener('DOMContentLoaded', async () => {
             const team = teamDoc.data().team;
 
             for (let i = 0; i < Math.min(team.length, 6); i++) {
-                const pokemon = team[i];
+                const pokemon= team[i];
                 const slot = i + 1;
 
                 await display_pokemon_info(pokemon.id, slot);
+
+                if (pokemon.moves && Array.isArray(pokemon.moves)) {
+                let dropdowns = document.getElementsByClassName(`move_dropdown${slot}`);
+                for (let m = 0; m < dropdowns.length; m++) {
+                    let dropdown = dropdowns[m];
+                    let moveName = pokemon.moves[m];
+
+                    let found = false;
+
+                    if (moveName) {
+                        for (let j = 0; j < dropdown.options.length; j++) {
+                            if (dropdown.options[j].value === moveName) {
+                                dropdown.selectedIndex = j;
+                                dropdown.className = `move_dropdown${slot} ${dropdown.options[j].className}`;
+                                found = true;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (!found) {
+                        dropdown.selectedIndex = 0;
+                        dropdown.className = `move_dropdown${slot}`;
+                    }
+                }
+            }
+
+
             }
         } catch (error) {
             console.error("Error loading team from Firestore:", error);
