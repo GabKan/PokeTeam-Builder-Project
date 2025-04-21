@@ -371,6 +371,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 await display_pokemon_info(pokemon.id, slot);
 
+                const nicknameInput = document.querySelector(`#pk${slot} .nickname`);
+                if (pokemon.nickname) {
+                    nicknameInput.value = pokemon.nickname;
+                }
+
                 if (pokemon.moves && Array.isArray(pokemon.moves)) {
                 let dropdowns = document.getElementsByClassName(`move_dropdown${slot}`);
                 for (let m = 0; m < dropdowns.length; m++) {
