@@ -103,6 +103,10 @@ button:hover {
     border-radius: 5px;
 }
 
+img {
+    width: 80px;
+}
+
 .edit-delete-buttons {
     margin-top: 10px;
 }

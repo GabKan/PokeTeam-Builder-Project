@@ -290,73 +290,105 @@
 <script src="scripts/profile.js" type="module"></script>
 
 <script type="module">
-    import { auth, logout } from "./scripts/auth.js";
-    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
 
-    document.addEventListener("DOMContentLoaded", () => {
-        const saveButton = document.getElementById("save-button");
-        const shareButton = document.getElementById("share-button");
-        const signupButton = document.getElementById("signup-button");
-        const logoutButton = document.getElementById("logout-button");
-        const viewTeamsButton = document.getElementById("view-teams");
+import { auth, logout } from "./scripts/auth.js";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-app.js";
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-firestore.js";
 
-        logoutButton.onclick = async () => {
-            try {
-                await logout();
-                alert("You have been logged out.");
-            } catch (error) {
-                console.error("Error logging out:", error.message);
-            }
-        };
+import firebaseConfig from "./firebaseConfig.js";
 
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                if (saveButton) saveButton.style.display = "inline-block";
-                if (shareButton) shareButton.style.display = "inline-block";
-                if (signupButton) signupButton.style.display = "none";
-                if (logoutButton) logoutButton.style.display = "inline-block";
-                if (viewTeamsButton) viewTeamsButton.style.display = "inline-block";
-            } else {
-                if (saveButton) saveButton.style.display = "none";
-                if (shareButton) shareButton.style.display = "none";
-                if (signupButton) signupButton.style.display = "inline-block";
-                if (logoutButton) logoutButton.style.display = "none";
-                if (viewTeamsButton) viewTeamsButton.style.display = "none";
-            }
-        });
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+document.addEventListener("DOMContentLoaded", () => {
+    const saveButton = document.getElementById("save-button");
+    const shareButton = document.getElementById("share-button");
+    const signupButton = document.getElementById("signup-button");
+    const logoutButton = document.getElementById("logout-button");
+    const viewTeamsButton = document.getElementById("view-teams");
+
+    logoutButton.onclick = async () => {
+        try {
+            await logout();
+            alert("You have been logged out.");
+        } catch (error) {
+            console.error("Error logging out:", error.message);
+        }
+    };
+
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            if (saveButton) saveButton.style.display = "inline-block";
+            if (shareButton) shareButton.style.display = "inline-block";
+            if (signupButton) signupButton.style.display = "none";
+            if (logoutButton) logoutButton.style.display = "inline-block";
+            if (viewTeamsButton) viewTeamsButton.style.display = "inline-block";
+        } else {
+            if (saveButton) saveButton.style.display = "none";
+            if (shareButton) shareButton.style.display = "none";
+            if (signupButton) signupButton.style.display = "inline-block";
+            if (logoutButton) logoutButton.style.display = "none";
+            if (viewTeamsButton) viewTeamsButton.style.display = "none";
+        }
     });
+});
 
+document.addEventListener('DOMContentLoaded', async () => {
+    const teamId = sessionStorage.getItem('teamId');
 
-const savedTeam = sessionStorage.getItem('currentTeam');
-if (savedTeam) {
-    const teamData = JSON.parse(savedTeam);
-    const team = teamData.team;
-    
-    for (let i = 0; i < Math.min(team.length, 6); i++) {
-        const pokemon = team[i];
-        const slot = i + 1;
-        
-        const nameInput = document.getElementById(`pokeSearch${slot}`);
-        if (nameInput) nameInput.value = pokemon.name || '';
-        
-        const nicknameInput = document.querySelector(`#pk${slot} .nickname`);
-        if (nicknameInput) nicknameInput.value = pokemon.nickname || '';
-        
-        const imgContainer = document.getElementById(`pk_img${slot}`);
-        if (imgContainer && pokemon.img) {
-            imgContainer.innerHTML = `<img src="${pokemon.img}" class="sprite">`;
+    if (!teamId) {
+        console.error("No teamID found in URL.");
+        return;
+    }
+
+    onAuthStateChanged(auth, async (user) => {
+        if (!user) {
+            alert("You must be logged in to view this team.");
+            return;
         }
 
-        const moveDropdowns = document.querySelectorAll(`#pk${slot} .move_dropdown${slot}`);
-        moveDropdowns.forEach((dropdown, j) => {
-            if (pokemon.moves && j < pokemon.moves.length) {
-                dropdown.value = pokemon.moves[j] || '';
+        try {
+            const teamDocRef = doc(db, "users", user.uid, "teams", teamId);
+            const teamDoc = await getDoc(teamDocRef);
+
+            if (!teamDoc.exists()) {
+                console.error("No such team found in Firestore.");
+                return;
             }
-        });
-    }
-    
-    sessionStorage.removeItem('currentTeam');
-}
+
+            const team = teamDoc.data().team;
+
+            for (let i = 0; i < Math.min(team.length, 6); i++) {
+                const pokemon = team[i];
+                const slot = i + 1;
+
+                const nameInput = document.getElementById(`pokeSearch${slot}`);
+                if (nameInput)
+                    nameInput.value = pokemon.name || '';
+
+                const nicknameInput = document.querySelector(`#pk${slot} .nickname`);
+                if (nicknameInput)
+                    nicknameInput.value = pokemon.nickname || '';
+
+                const imgContainer = document.getElementById(`pk_img${slot}`);
+                if (imgContainer && pokemon.img)
+                    imgContainer.innerHTML = `<img src="${pokemon.img}" class="sprite">`;
+
+                display_moves(slot, pokemon);
+
+                // const moveDropdowns = document.querySelectorAll(`#pk${slot} .move_dropdown${slot}`);
+                // moveDropdowns.forEach((dropdown, j) => {
+                //     if (pokemon.moves && j < pokemon.moves.length) {
+                //         dropdown.value = pokemon.moves[j] || '';
+                //     }
+                // });
+            }
+        } catch (error) {
+            console.error("Error loading team from Firestore:", error);
+        }
+    });
+});
 
 </script>
 

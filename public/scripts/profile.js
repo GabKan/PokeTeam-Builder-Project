@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-app.js";
-import { getFirestore, collection, getDoc, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-firestore.js";
+import { getFirestore, collection, deleteDoc, doc, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-firestore.js";
 import { auth } from "./auth.js";
 import firebaseConfig from "../firebaseConfig.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-auth.js";
@@ -84,7 +84,7 @@ async function loadSavedTeams() {
         querySnapshot.forEach((doc) => {
             const teamData = doc.data().team;
             if (teamData) {
-                savedTeams.push(teamData);
+                savedTeams.push({ id: doc.id, team: teamData });
             }
         });
 
@@ -95,72 +95,69 @@ async function loadSavedTeams() {
     }
 }
 
-window.saveTeam = saveTeam;
-window.loadSavedTeams = loadSavedTeams;
-
 async function displayTeam(index) {
-    teams = await loadSavedTeams();
+    const team = teams[index].team;
+    const teamCard = document.getElementById(`team${index + 1}`);
 
-    let teamCard = document.getElementById(`team${index + 1}`);
     if (!teamCard) {
         console.error(`Team card with ID team${index} not found.`);
         return;
     }
 
-    let pokiImgs = teamCard.querySelectorAll(".poke-imagine");
-    let team = teams[index];
+    const pokiImgs = teamCard.querySelectorAll(".poke-imagine");
 
     for (let i = 0; i < team.length; i++)
         if (pokiImgs[i] && team[i] && team[i].img)
             pokiImgs[i].innerHTML = '<img src="' + team[i].img + '" class="sprite">';
 
-    // setupTeamButtons(teamCard, index);
+    setupTeamButtons(teamCard, index);
 }
 
-// function setupTeamButtons(teamCard, index) {
-//     let deleteBtn = teamCard.querySelector(".delete-btn");
-//     if (deleteBtn) {
-//         deleteBtn.onclick = DeleteHandler(index);
-//     }
+async function deleteTeam(index) {
+    try {
+        const user = await waitForUserAuth();
+        const userTeamsCollection = collection(db, "users", user.uid, "teams");
 
-//     let viewBtn = teamCard.querySelector(".view-team-btn");
-//     if (viewBtn) {
-//         viewBtn.onclick = ViewHandler(index);
-//     }
-// }
+        if (index >= 0 && index < teams.length) {
+            const teamDocId = teams[index].id;
+            const teamDocRef = doc(userTeamsCollection, teamDocId);
+            await deleteDoc(teamDocRef);
 
-// function DeleteHandler(index) {
-//     return function deleteTeamHandler() {
-//         deleteTeam(index);
-//     };
-// }
+            teams.splice(index, 1);
 
-// function ViewHandler(index) {
-//     return function viewTeamHandler() {
-//         viewTeam(index);
-//     };
-// }
+            window.location.href = './public/profile.html';
+            window.location.reload();
+        }
+    } catch(error) {
+        console.error("Error deleting team:", error);
+        alert("Failed to delete the team. Please try again.");
+    }
+}
 
-// function deleteTeam(index) {
-//     let storedTeams = localStorage.getItem("savedTeams");
-//     if (storedTeams) {
-//         savedTeams = JSON.parse(storedTeams);
-//     } else {
-//         savedTeams = [];
-//     }
-    
-//     if (index >= 0 && index < savedTeams.length) {
-//         savedTeams.splice(index, 1);
-//         localStorage.setItem("savedTeams", JSON.stringify(savedTeams));
-//         location.reload();
-//     }
-// }
+async function viewTeam(index) {
+    if (index < 0 || index >= teams.length) {
+        console.error(`Invalid team index: ${index}`);
+        return;
+    }
 
+    const teamID = teams[index].id;
+    sessionStorage.setItem('teamId', teamID);
+    window.location.href = `index.html`;
+}
 
-// function viewTeam(index) {
-//     localStorage.setItem("currentTeamIndex", index.toString());
-//     window.location.href = "index.html";
-// }
+function setupTeamButtons(teamCard, index) {
+    let deleteBtn = teamCard.querySelector(".delete-btn");
+    if (deleteBtn)
+        deleteBtn.onclick = function() {
+            deleteTeam(index);
+        };
+
+    let viewBtn = teamCard.querySelector(".view-team-btn");
+    if (viewBtn)
+        viewBtn.onclick = function() {
+            viewTeam(index);
+        };
+}
 
 async function initializeTeamLoader() {
     try {
@@ -174,6 +171,9 @@ async function initializeTeamLoader() {
         console.error("Failed to initialize team loader:", error);
     }
 }
+
+window.saveTeam = saveTeam;
+window.loadSavedTeams = loadSavedTeams;
 
 window.addEventListener("DOMContentLoaded", () => {
     if (document.querySelector(".saved-teams"))
