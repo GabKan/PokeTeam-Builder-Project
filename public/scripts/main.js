@@ -813,6 +813,27 @@ function filterPokemon(list_num){
     }
 }
 
+function clearCard(cardNumber) {
+
+    poke_team[cardNumber-1] = null;
+
+    document.querySelector(`#pokeSearch${cardNumber}`).value = '';
+
+    document.querySelector(`#pk${cardNumber} .nickname`).value = '';
+
+    document.querySelector(`#pk_img${cardNumber}`).innerHTML = '';
+
+    document.querySelector(`#poke_type${cardNumber}`).innerHTML = '';
+
+    let dropdowns = document.getElementsByClassName(`move_dropdown${cardNumber}`);
+    for (let dropdown of dropdowns) {
+        dropdown.innerHTML = '<option value="">Select Move</option>';
+        dropdown.className = `move_dropdown${cardNumber}`;
+    }
+    
+    document.querySelector(`#pokeList${cardNumber}`).style.display = 'none';
+}
+
 async function main() {
     document.getElementById("loading-screen").style.display = "flex";  // Show loading
 
