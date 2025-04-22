@@ -22,18 +22,27 @@ for (let i = 0; i < 18; i++) {
 
 function generateTeamString() {
     let teamString = "";
+    
+    for (let i = 0; i < 6; i++) { 
+        if (poke_team[i]) {
+            const pk = poke_team[i];
 
-    for (let i = 0; i < poke_team.length; i++) {
-        let pk = poke_team[i];
-        let moves = pk.selected_moves ? pk.selected_moves.join(',') : "";
-        let nickname=pk.nickname ? pk.nickname: "";
-        teamString += pk.id + ":" + pk.name + ":" + moves + ":" + nickname;
-
-        if (i !== poke_team.length - 1) {
-            teamString += "|";
+            const dropdowns = document.getElementsByClassName(`move_dropdown${i+1}`);
+            const currentMoves = [];
+            for (let j = 0; j < dropdowns.length; j++) {
+                if (dropdowns[j].value) {
+                    currentMoves.push(dropdowns[j].value);
+                }
+            }
+            
+            teamString += `${pk.id}:${pk.name}:${currentMoves.join(',')}:${pk.nickname || ''}`;
+        } else {
+            teamString += ":::"; 
         }
+        
+        if (i < 5) teamString += "|";
     }
-
+    
     return teamString;
 }
 
@@ -43,15 +52,18 @@ function loadTeamFromString(teamString) {
 
     for (let entry of teamArray) {
         let parts = entry.split(":");
+
+        if (parts.length < 2) continue;
+        
         let id = parseInt(parts[0]);
-        let name = parts[1] ? parts[1] : "";
-        let moves = parts[2] ? parts[2].split(",") : [];
-        let nickname = parts[3] ? parts[3] : ""; 
+        let name = parts[1] || "";
+        let moves = (parts[2] && parts[2] !== "undefined") ? parts[2].split(",") : [];
+        let nickname = parts[3] || ""; 
 
         newTeam.push({
             id: id,
             name: name,
-            selected_moves: moves,
+            selected_moves: moves.filter(m => m), 
             nickname: nickname 
         });
     }
@@ -60,17 +72,28 @@ function loadTeamFromString(teamString) {
 }
 
 function generateShareableURL() {
-    for (let i = 0; i < poke_team.length; i++) {
+    for (let i = 0; i < 6; i++) { 
+        if (!poke_team[i]) {
+            poke_team[i] = { id: -1, name: "", selected_moves: [], nickname: "" };
+        }
+        
         let nicknameInput = document.querySelector(`#pk${i+1} .nickname`);
         if (nicknameInput) {
-            poke_team[i].nickname = nicknameInput.value.trim();  
+            poke_team[i].nickname = nicknameInput.value.trim();
+        }
+        
+        let dropdowns = document.getElementsByClassName(`move_dropdown${i+1}`);
+        poke_team[i].selected_moves = [];
+        for (let j = 0; j < dropdowns.length; j++) {
+            if (dropdowns[j].value) {
+                poke_team[i].selected_moves.push(dropdowns[j].value);
+            }
         }
     }
 
-    let teamString = generateTeamString(); 
-    let encoded = encodeURIComponent(teamString); 
-    let url = `${window.location.origin}${window.location.pathname}?team=${encoded}`;
-    return url;
+    let teamString = generateTeamString();
+    let encoded = encodeURIComponent(teamString);
+    return `${window.location.origin}${window.location.pathname}?team=${encoded}`;
 }
 
 async function loadTeamFromURL() {
