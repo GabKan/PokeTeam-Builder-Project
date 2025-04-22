@@ -105,7 +105,14 @@ async function loadTeamFromURL() {
         let loadedTeam = loadTeamFromString(decoded);
 
         for (let i = 0; i < loadedTeam.length; i++) {
+            if (!loadedTeam[i] || loadedTeam[i].id === -1) continue;
+
             let pokemon = get_pokemon(loadedTeam[i].id)
+            if (!pokemon) {
+                console.warn(`Pokemon with ID ${loadedTeam[i].id} not found.`);
+                continue;
+            }
+
             pokemon.selected_moves=loadedTeam[i].selected_moves;
             poke_team[i] = pokemon; 
             
@@ -167,7 +174,6 @@ async function loadTeamFromURL() {
                 }
             }
         }
-        console.log("Loaded team from URL:", poke_team);
     }
 }
 
